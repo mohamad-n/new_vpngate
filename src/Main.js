@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  ServiceProvider,
-  LoaderProvider,
-  VpsProvider,
-  SubscriptionProvider,
-  DeepLinkProvider,
-} from "./providers";
+import { LoaderProvider, VpsProvider, SubscriptionProvider } from "./providers";
 import Toast from "react-native-toast-message";
 
 //------ ios ------

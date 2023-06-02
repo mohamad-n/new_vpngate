@@ -32,3 +32,27 @@ export const getDeviceInfo = () => {
     }
   });
 };
+
+export const getNewDeviceInfo = () => {
+  return new Promise(async (resolve) => {
+    try {
+      const deviceSpecificId = Crypto.randomUUID();
+      await AsyncStorage.setItem("@deviceSpecificId", deviceSpecificId);
+
+      const { timeZone } = Localization.getCalendars()?.pop();
+      return resolve({
+        deviceSpecificId,
+        deviceManufacturer: Device.manufacturer,
+        deviceOsVersion: Device.osVersion,
+        deviceOs: Device.osName.toUpperCase(),
+        deviceModelName: Device.modelName,
+        appVersion: Platform.OS === "ios" ? IOS_APP_VERSION : ANDROID_APP_VERSION,
+        ...(timeZone && { timeZone }),
+      });
+    } catch (error) {
+      console.log(error);
+
+      return reject(null);
+    }
+  });
+};

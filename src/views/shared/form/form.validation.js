@@ -29,6 +29,12 @@ export const signInValidationSchema = object().shape({
   password: yup.string().required("Password is required"),
 });
 
+export const emailPrePhraseValidationSchema = object().shape({
+  emailPrePhrase: yup
+    .string()
+    .min(6, ({ min }) => `name must be at least ${min} characters`)
+    .required("name is required"),
+});
 export const signUpVersificationValidationSchema = object().shape({
   code: yup.string().min(6).max(6).required("versification code is required"),
 });
