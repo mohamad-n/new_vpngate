@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import * as React from 'react';
+import * as React from "react";
 import {
   Button,
   StyleSheet,
@@ -15,62 +15,61 @@ import {
   SafeAreaView,
   StatusBar,
   useColorScheme,
-} from 'react-native';
-import {SharedHeader} from '../../shared';
-import {WebView} from 'react-native-webview';
-import {tosContent} from './tos.content';
-import {theme} from '../../../theme';
+} from "react-native";
+import { SharedHeader } from "../../shared";
+import { WebView } from "react-native-webview";
+import { tosContent } from "./tos.content";
+import { palette } from "../../../theme";
 
-export const Tos = ({navigation}) => {
-  const isDarkMode = useColorScheme() === 'dark';
+export const Tos = ({ navigation }) => {
+  const isDarkMode = useColorScheme() === "dark";
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
         marginTop: 0,
-        backgroundColor: isDarkMode
-          ? theme.dark.mainBackground
-          : theme.light.mainBackground,
-      }}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
+      }}
+    >
+      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <View
         style={{
           flex: 1,
-          justifyContent: 'flex-start',
-          alignItems: 'stretch',
-          backgroundColor: isDarkMode
-            ? theme.dark.mainBackground
-            : theme.light.mainBackground,
-          flexDirection: 'column',
-        }}>
+          justifyContent: "flex-start",
+          alignItems: "stretch",
+          backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
+          flexDirection: "column",
+        }}
+      >
         <SharedHeader navigation={navigation} title="Terms Of Services" />
         {/* <ScrollView showsVerticalScrollIndicator={false}> */}
         <View
           style={{
             flex: 1,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
             backgroundColor: isDarkMode
-              ? theme.dark.mainBackground
-              : theme.light.mainBackground,
+              ? palette.dark.mainBackground
+              : palette.light.mainBackground,
             // marginHorizontal: 20,
             // marginTop: 10,
             // paddingTop: 30,
-          }}>
+          }}
+        >
           {/* <Text style={{fontSize: 18, fontWeight: 'bold'}}>
             Terms Of Service
           </Text> */}
           <WebView
             style={{
               backgroundColor: isDarkMode
-                ? theme.dark.mainBackground
-                : theme.light.mainBackground,
+                ? palette.dark.mainBackground
+                : palette.light.mainBackground,
             }}
-            originWhitelist={['*']}
+            originWhitelist={["*"]}
             //   source={{html: '<h1>Hello world</h1>'}}
-            source={{baseUrl: '', html: tosContent(isDarkMode)}}
+            source={{ baseUrl: "", html: tosContent(isDarkMode) }}
           />
         </View>
         {/* </ScrollView> */}
@@ -83,6 +82,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 0,
-    backgroundColor: '#F3F9FF',
+    backgroundColor: "#F3F9FF",
   },
 });

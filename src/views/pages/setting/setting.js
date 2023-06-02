@@ -15,20 +15,24 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 
-import { ServiceContext } from "../../../providers";
-import { theme } from "../../../theme";
+import { ServiceContext, SubscriptionContext } from "../../../providers";
+import { palette } from "../../../theme";
 import { SharedHeader } from "../../shared";
 
 import { getDurationFromExpire, isExpired } from "../../../libs/tools";
+import { Badge } from "./badge";
 const { IOS_APP_VERSION, ANDROID_APP_VERSION } = Constants.expoConfig.extra;
 
 export const Setting = ({ navigation }) => {
-  const { checkUpdateVersion, signoutDispatch, subscriptionInfo, userEmail } =
-    React.useContext(ServiceContext);
+  const { logout, userEmail, subscriptionInfo } = React.useContext(SubscriptionContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const { width } = useWindowDimensions();
-
+  const logoutRequest = async () => {
+    try {
+      await logout();
+    } catch (error) {}
+  };
   const prepareSignout = () => {
     Alert.alert("Log out verify", "Are you sure you want to log out?", [
       {
@@ -38,125 +42,50 @@ export const Setting = ({ navigation }) => {
       },
       {
         text: "Yes",
-        onPress: () => signoutDispatch(),
+        onPress: () => logoutRequest(),
       },
     ]);
   };
 
-  const bottomBadge = () => {
-    if (typeof subscriptionInfo !== "object") {
-      return null;
-    }
-    if (!subscriptionInfo?.deviceActivationInfo) {
-      return (
-        <View
-          style={[
-            styles({ theme, isDarkMode, width }).subscriptionView.bottomBadge,
-            { backgroundColor: theme.dangerColor },
-          ]}
-        >
-          <Text style={[styles({ theme, isDarkMode, width }).subscriptionView.badgeText]}>
-            Invalid Device
-          </Text>
-        </View>
-      );
-    }
-
-    if (!subscriptionInfo?.userActivationInfo) {
-      return (
-        <View
-          style={[
-            styles({ theme, isDarkMode, width }).subscriptionView.bottomBadge,
-            { backgroundColor: theme.dangerColor },
-          ]}
-        >
-          <Text style={[styles({ theme, isDarkMode, width }).subscriptionView.badgeText]}>
-            Inactive
-          </Text>
-        </View>
-      );
-    }
-
-    if (subscriptionInfo?.userSubInfo?.isActive) {
-      if (isExpired(subscriptionInfo?.userSubInfo?.expiredAt)) {
-        return (
-          <View
-            style={[
-              styles({ theme, isDarkMode, width }).subscriptionView.bottomBadge,
-              { backgroundColor: theme.dangerColor },
-            ]}
-          >
-            <Text style={[styles({ theme, isDarkMode, width }).subscriptionView.badgeText]}>
-              Subscription Expired
-            </Text>
-          </View>
-        );
-      }
-      const remainDays = getDurationFromExpire(subscriptionInfo?.userSubInfo?.expiredAt);
-
-      return (
-        <View
-          style={[
-            styles({ theme, isDarkMode, width }).subscriptionView.bottomBadge,
-            {
-              backgroundColor:
-                !remainDays || remainDays > 10 ? theme.agreeColor : theme.orangeColor,
-            },
-          ]}
-        >
-          <Text style={[styles({ theme, isDarkMode, width }).subscriptionView.badgeText]}>
-            ⭐️ Premium ⭐️ {remainDays ? `(${remainDays} days left)` : null}
-          </Text>
-        </View>
-      );
-    }
-
-    return null;
-  };
-
   return (
-    <SafeAreaView style={styles({ theme, isDarkMode, width }).safeArea}>
+    <SafeAreaView style={styles({ isDarkMode, width }).safeArea}>
       <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
-      <View style={styles({ theme, isDarkMode, width }).mainView}>
+      <View style={styles({ isDarkMode, width }).mainView}>
         <SharedHeader navigation={navigation} title="Setting" />
 
-        <View style={styles({ theme, isDarkMode, width }).innerView}>
-          <View style={styles({ theme, isDarkMode, width }).upperView}>
-            <Text style={styles({ theme, isDarkMode, width }).headerTitle}>
+        <View style={styles({ isDarkMode, width }).innerView}>
+          <View style={styles({ isDarkMode, width }).upperView}>
+            <Text style={styles({ isDarkMode, width }).headerTitle}>
               Version : {Platform.OS === "ios" ? IOS_APP_VERSION : ANDROID_APP_VERSION}
             </Text>
             <TouchableOpacity
-              onPress={() => checkUpdateVersion("approval")}
+              onPress={() => console.log("approval")}
               style={[
-                styles({ theme, isDarkMode, width }).actionButton,
-                { backgroundColor: theme.blueColor, marginHorizontal: 0 },
+                styles({ isDarkMode, width }).actionButton,
+                { backgroundColor: palette.blueColor, marginHorizontal: 0 },
               ]}
             >
-              <Text style={[styles({ theme, isDarkMode, width }).actionButtonText]}>
-                check for update
-              </Text>
+              <Text style={[styles({ isDarkMode, width }).actionButtonText]}>check for update</Text>
             </TouchableOpacity>
           </View>
           {userEmail ? (
-            <View style={[styles({ theme, isDarkMode, width }).loggedinView]}>
-              <Text
-                style={[styles({ theme, isDarkMode, width }).headerTitle, { marginBottom: 30 }]}
-              >
+            <View style={[styles({ isDarkMode, width }).loggedinView]}>
+              <Text style={[styles({ isDarkMode, width }).headerTitle, { marginBottom: 30 }]}>
                 News Letter
               </Text>
-              <View style={[styles({ theme, isDarkMode, width }).subscriptionView.box]}>
+              <View style={[styles({ isDarkMode, width }).subscriptionView.box]}>
                 <View
                   style={[
-                    styles({ theme, isDarkMode, width }).subscriptionView.leftBadge,
-                    { backgroundColor: theme.blueColor },
+                    styles({ isDarkMode, width }).subscriptionView.leftBadge,
+                    { backgroundColor: palette.blueColor },
                   ]}
                 >
-                  <Text style={[styles({ theme, isDarkMode, width }).subscriptionView.badgeText]}>
+                  <Text style={[styles({ isDarkMode, width }).subscriptionView.badgeText]}>
                     Registered by
                   </Text>
                 </View>
-                {bottomBadge()}
-                <Text style={[styles({ theme, isDarkMode, width }).subscriptionView.email]}>
+                <Badge subscriptionInfo={subscriptionInfo} />
+                <Text style={[styles({ isDarkMode, width }).subscriptionView.email]}>
                   {userEmail}
                 </Text>
               </View>
@@ -164,67 +93,51 @@ export const Setting = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() => navigation.navigate("NotificationBoard")}
                 style={[
-                  styles({ theme, isDarkMode, width }).actionButton,
-                  { backgroundColor: theme.agreeColor },
+                  styles({ isDarkMode, width }).actionButton,
+                  { backgroundColor: palette.agreeColor },
                 ]}
               >
-                <Text style={styles({ theme, isDarkMode, width }).actionButtonText}>
-                  View Message Box
-                </Text>
+                <Text style={styles({ isDarkMode, width }).actionButtonText}>View Message Box</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => prepareSignout()}
                 style={[
-                  styles({ theme, isDarkMode, width }).actionButton,
-                  { backgroundColor: theme.dangerColor },
+                  styles({ isDarkMode, width }).actionButton,
+                  { backgroundColor: palette.dangerColor },
                 ]}
               >
-                <Text style={styles({ theme, isDarkMode, width }).actionButtonText}>Log out</Text>
+                <Text style={styles({ isDarkMode, width }).actionButtonText}>Log out</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <>
-              <View style={styles({ theme, isDarkMode, width }).loginView}>
-                <Text
-                  style={[styles({ theme, isDarkMode, width }).headerTitle, { marginBottom: 30 }]}
-                >
+              <View style={styles({ isDarkMode, width }).loginView}>
+                <Text style={[styles({ isDarkMode, width }).headerTitle, { marginBottom: 30 }]}>
                   News Letter
                 </Text>
-                <Text style={styles({ theme, isDarkMode, width }).description}>
-                  in order to recieve emails for new locations an server availabilities you can sign
+                <Text style={styles({ isDarkMode, width }).description}>
+                  in order to receive emails for new locations an server availabilities you can sign
                   in to your account
                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Signin")}
-                  style={styles({ theme, isDarkMode, width }).actionButton}
+                  onPress={() => navigation.navigate("SignIn")}
+                  style={styles({ isDarkMode, width }).actionButton}
                 >
-                  <Text style={styles({ theme, isDarkMode, width }).actionButtonText}>Sign In</Text>
+                  <Text style={styles({ isDarkMode, width }).actionButtonText}>Sign In</Text>
                 </TouchableOpacity>
               </View>
-              <View style={styles({ theme, isDarkMode, width }).loginView}>
-                <Text
-                  style={[
-                    styles({ theme, isDarkMode, width }).description,
-                    { alignSelf: "center" },
-                  ]}
-                >
-                  you dont have account?
+              <View style={styles({ isDarkMode, width }).loginView}>
+                <Text style={[styles({ isDarkMode, width }).description, { alignSelf: "center" }]}>
+                  you don't have account?
                 </Text>
-                <Text
-                  style={[
-                    styles({ theme, isDarkMode, width }).description,
-                    { alignSelf: "center" },
-                  ]}
-                >
+                <Text style={[styles({ isDarkMode, width }).description, { alignSelf: "center" }]}>
                   you can register new account
                 </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate("Signup")}
-                  style={styles({ theme, isDarkMode, width }).actionButton}
+                  onPress={() => navigation.navigate("SignUp")}
+                  style={styles({ isDarkMode, width }).actionButton}
                 >
-                  <Text style={styles({ theme, isDarkMode, width }).actionButtonText}>
-                    Register
-                  </Text>
+                  <Text style={styles({ isDarkMode, width }).actionButtonText}>Register</Text>
                 </TouchableOpacity>
               </View>
             </>
@@ -235,7 +148,7 @@ export const Setting = ({ navigation }) => {
   );
 };
 
-const styles = ({ theme, isDarkMode, width }) =>
+const styles = ({ isDarkMode, width }) =>
   StyleSheet.create({
     subscriptionView: {
       box: {
@@ -244,15 +157,15 @@ const styles = ({ theme, isDarkMode, width }) =>
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: isDarkMode ? theme.dark.mainBackground : theme.light.mainBackground,
-        shadowColor: isDarkMode ? theme.dark.shadowColor : theme.light.shadowColor,
+        backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
+        shadowColor: isDarkMode ? palette.dark.shadowColor : palette.light.shadowColor,
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 9,
         shadowRadius: 4,
         ...(width > 400 && { alignSelf: "center", width: 400 }),
         ...(Platform.OS === "android" && {
           borderWidth: 1,
-          borderColor: theme.disabledColor,
+          borderColor: palette.disabledColor,
         }),
       },
       leftBadge: {
@@ -264,7 +177,7 @@ const styles = ({ theme, isDarkMode, width }) =>
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        color: isDarkMode ? theme.dark.title : theme.light.title,
+        color: isDarkMode ? palette.dark.title : palette.light.title,
         padding: 10,
         paddingBottom: 5,
         paddingTop: 5,
@@ -277,7 +190,7 @@ const styles = ({ theme, isDarkMode, width }) =>
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        color: isDarkMode ? theme.dark.title : theme.light.title,
+        color: isDarkMode ? palette.dark.title : palette.light.title,
         padding: 10,
         paddingBottom: 5,
         paddingTop: 5,
@@ -285,25 +198,25 @@ const styles = ({ theme, isDarkMode, width }) =>
       badgeText: {
         fontSize: 14,
         fontWeight: "400",
-        color: theme.dark.title,
+        color: palette.dark.title,
         textAlign: "center",
       },
       email: {
         fontSize: 20,
         fontWeight: "600",
-        color: isDarkMode ? theme.dark.title : theme.light.title,
+        color: isDarkMode ? palette.dark.title : palette.light.title,
       },
     },
     safeArea: {
       flex: 1,
       marginTop: 0,
-      backgroundColor: isDarkMode ? theme.dark.mainBackground : theme.light.mainBackground,
+      backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
     },
     mainView: {
       flex: 1,
       justifyContent: "flex-start",
       alignItems: "stretch",
-      backgroundColor: isDarkMode ? theme.dark.mainBackground : theme.light.mainBackground,
+      backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
       flexDirection: "column",
     },
     innerView: {
@@ -321,12 +234,12 @@ const styles = ({ theme, isDarkMode, width }) =>
       marginTop: 10,
       paddingBottom: 20,
       margin: 20,
-      borderBottomColor: isDarkMode ? theme.dark.border : theme.light.border,
+      borderBottomColor: isDarkMode ? palette.dark.border : palette.light.border,
       borderBottomWidth: 1,
     },
     headerTitle: {
       fontSize: 18,
-      color: isDarkMode ? theme.dark.title : theme.light.title,
+      color: isDarkMode ? palette.dark.title : palette.light.title,
     },
     loginView: {
       flexDirection: "column",
@@ -335,11 +248,11 @@ const styles = ({ theme, isDarkMode, width }) =>
       marginTop: 10,
       paddingBottom: 50,
       margin: 20,
-      borderBottomColor: isDarkMode ? theme.dark.border : theme.light.border,
+      borderBottomColor: isDarkMode ? palette.dark.border : palette.light.border,
     },
     description: {
       fontSize: 14,
-      color: isDarkMode ? theme.dark.title : theme.light.title,
+      color: isDarkMode ? palette.dark.title : palette.light.title,
     },
     actionButton: {
       flexDirection: "row",
@@ -350,7 +263,7 @@ const styles = ({ theme, isDarkMode, width }) =>
       marginVertical: 20,
       marginHorizontal: 30,
       borderRadius: 10,
-      backgroundColor: isDarkMode ? theme.dark.buttonBackground : theme.light.buttonBackground,
+      backgroundColor: isDarkMode ? palette.dark.buttonBackground : palette.light.buttonBackground,
       ...(width > 400 && { alignSelf: "center", width: 200 }),
     },
     actionButtonText: {

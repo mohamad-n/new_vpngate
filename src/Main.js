@@ -1,5 +1,11 @@
 import * as React from "react";
-import { ServiceProvider, LoaderProvider, VpsProvider } from "./providers";
+import {
+  ServiceProvider,
+  LoaderProvider,
+  VpsProvider,
+  SubscriptionProvider,
+  DeepLinkProvider,
+} from "./providers";
 import Toast from "react-native-toast-message";
 
 //------ ios ------
@@ -16,21 +22,20 @@ export const Main = () => {
     //   <LoaderProvider>
     //      <ConnectProvider>
     //     <ServiceProvider>
-    //         <LinkProvider>
+
     <LoaderProvider>
       <VpsProvider>
-        <ServiceProvider>
+        <SubscriptionProvider>
           <NavigationStack />
           <Toast
             position="top"
             config={toastConfig}
             // bottomOffset={20}
           />
-        </ServiceProvider>
+        </SubscriptionProvider>
       </VpsProvider>
     </LoaderProvider>
 
-    //            </LinkProvider>
     //       </ServiceProvider>
     //       </ConnectProvider>
     //    </LoaderProvider>

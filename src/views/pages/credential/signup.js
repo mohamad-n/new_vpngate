@@ -2,7 +2,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as React from "react";
 import {
-  Button,
   StyleSheet,
   Text,
   View,
@@ -28,58 +27,26 @@ import {
   trafficIcon,
   triggerIcon,
 } from "../../../asset/img/icon";
-import { DismissKeyboard, LoaderContext, ServiceContext } from "../../../providers";
+import {
+  DismissKeyboard,
+  LoaderContext,
+  ServiceContext,
+  SubscriptionContext,
+} from "../../../providers";
 import { palette } from "../../../theme";
 import { publicService } from "../../../service";
 import { Field, Formik } from "formik";
-import { FormField, signUpValidationSchema } from "../../shared";
+import { Button, FormField, signUpValidationSchema } from "../../shared";
 const minPassChar = 6;
 
 export const SignUp = ({ route, navigation }) => {
   // const { showAlert } = React.useContext(AlertContext);
   // const { signInDispatch } = React.useContext(ServiceContext);
   const { setIsLoading } = React.useContext(LoaderContext);
+  const { register } = React.useContext(SubscriptionContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const [user, setUser] = React.useState();
-
-  const register = async () => {
-    try {
-      if (user.password?.length < minPassChar) {
-        throw new Error(`password must be more than ${minPassChar} char`);
-      }
-      if (user.password !== user.verifyPassword) {
-        throw new Error("password and verify password is not same");
-      }
-
-      const { email, password } = user;
-      setIsLoading("signing up");
-
-      await publicService.sendRequest({
-        method: "POST",
-        url: "/user/signup",
-        data: { email, password },
-      });
-
-      const { accessToken, email: userEmail } = await publicService.sendRequest({
-        method: "POST",
-        url: "/user/signin",
-
-        data: { email, password },
-      });
-      // await signInDispatch(accessToken, userEmail);
-
-      // await updatePushNotificationTokenForUser();
-      navigation.navigate("SettingPage", {
-        userEmail,
-      });
-      setIsLoading(false);
-    } catch (error) {
-      // console.log('signup error : ', error);
-      setIsLoading(false);
-      // showAlert({ message: error?.message || error, type: "error" });
-    }
-  };
 
   // const updatePushNotificationTokenForUser = () => {
   //   return new Promise(async (resolve) => {
@@ -95,6 +62,13 @@ export const SignUp = ({ route, navigation }) => {
   //     }
   //   });
   // };
+
+  const registerRequest = async (email, password) => {
+    try {
+      await register(email, password);
+      navigation.goBack();
+    } catch (error) {}
+  };
   return (
     <DismissKeyboard avoidType="padding">
       <View style={styles({ palette, isDarkMode }).mainView}>
@@ -113,23 +87,36 @@ export const SignUp = ({ route, navigation }) => {
 
           <Formik
             initialValues={{
-              email: "",
-              password: "",
-              confirmPassword: "",
+              email: "alfy@gmail.com",
+              password: "12345678",
+              confirmPassword: "12345678",
             }}
-            onSubmit={(values) => loginWithEmailRequest(values)}
+            onSubmit={(values) => {
+              const { email, password } = values;
+              registerRequest(email, password);
+            }}
             validationSchema={signUpValidationSchema}
           >
             {({ handleSubmit, isValid }) => (
               <>
                 <Field lowerCased component={FormField} name="email" placeholder="Email" />
 
-                <Field component={FormField} name="password" placeholder="Password" />
-                <Field component={FormField} name="confirmPassword" placeholder="Verify Password" />
+                <Field
+                  component={FormField}
+                  name="password"
+                  placeholder="Password"
+                  secureTextEntry
+                />
+                <Field
+                  component={FormField}
+                  name="confirmPassword"
+                  placeholder="Verify Password"
+                  secureTextEntry
+                />
 
                 <Button
                   disabled={!isValid}
-                  title="Login"
+                  title="Register"
                   widthType={300}
                   textStyle={{ fontWeight: 500 }}
                   onPress={handleSubmit}

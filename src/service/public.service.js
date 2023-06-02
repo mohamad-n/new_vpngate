@@ -95,5 +95,5 @@ const handleAxiosResponse = (response) => {
 };
 
 export const publicService = {
-  sendRequest: sendRequest,
+  sendRequest,
 };

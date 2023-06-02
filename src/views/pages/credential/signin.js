@@ -14,7 +14,13 @@ import {
 } from "react-native";
 
 import { dropDownIcon } from "../../../asset/img/icon";
-import { AlertContext, DismissKeyboard, LoaderContext, ServiceContext } from "../../../providers";
+import {
+  AlertContext,
+  DismissKeyboard,
+  LoaderContext,
+  ServiceContext,
+  SubscriptionContext,
+} from "../../../providers";
 // import { request } from "../../../service/api";
 import { publicService } from "../../../service";
 import { palette } from "../../../theme";
@@ -30,38 +36,16 @@ export const SignIn = ({ navigation }) => {
   // const { showAlert } = React.useContext(AlertContext);
   const { setIsLoading } = React.useContext(LoaderContext);
 
-  const { signInDispatch } = React.useContext(ServiceContext);
+  const { login } = React.useContext(SubscriptionContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const [user, setUser] = React.useState();
 
-  const login = async () => {
+  const loginRequest = async (email, password) => {
     try {
-      if (user.password?.length < minPassChar) {
-        throw new Error(`password must be more than ${minPassChar} char`);
-      }
-      const { email, password } = user;
-      setIsLoading("signing in");
-
-      const { accessToken, email: userEmail } = await publicService.sendRequest({
-        method: "POST",
-        url: "/user/signin",
-
-        data: { email, password },
-      });
-
-      await signInDispatch(accessToken, userEmail, "signin");
-      // await updatePushNotificationTokenForUser();
-      navigation.navigate("SettingPage", {
-        userEmail,
-      });
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-
-      // console.log(error);
-      // showAlert({ message: error?.message || error, type: "error" });
-    }
+      await login(email, password);
+      navigation.goBack();
+    } catch (error) {}
   };
 
   // const updatePushNotificationTokenForUser = () => {
@@ -98,17 +82,26 @@ export const SignIn = ({ navigation }) => {
 
           <Formik
             initialValues={{
-              email: "",
-              password: "",
+              email: "alfy@gmail.com",
+              password: "12345678",
             }}
-            onSubmit={(values) => loginWithEmailRequest(values)}
+            onSubmit={(values) => {
+              const { email, password } = values;
+
+              loginRequest(email, password);
+            }}
             validationSchema={signInValidationSchema}
           >
             {({ handleSubmit, isValid }) => (
               <>
                 <Field lowerCased component={FormField} name="email" placeholder="Email" />
 
-                <Field component={FormField} name="password" placeholder="Password" />
+                <Field
+                  secureTextEntry
+                  component={FormField}
+                  name="password"
+                  placeholder="Password"
+                />
 
                 <Button
                   disabled={!isValid}

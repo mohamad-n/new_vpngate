@@ -9,6 +9,13 @@ export const getImage = (imageUrl) => {
   return BASE_URL.slice(0, -6) + imageUrl;
 };
 
+export function getDateString(date) {
+  if (!date) {
+    return;
+  }
+
+  return moment(date).format("YYYY/MM/DD");
+}
 export function getDateAndTime(date) {
   if (!date) {
     return;

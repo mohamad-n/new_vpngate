@@ -54,7 +54,6 @@ export const Location = ({ navigation }) => {
 
   React.useEffect(() => {
     getVpsList();
-
     return () => {};
   }, []);
 

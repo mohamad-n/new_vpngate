@@ -1,6 +1,7 @@
 import { Dimensions, View } from "react-native";
-import Toast, { BaseToast, ErrorToast } from "react-native-toast-message";
-import { Text } from "../components/shared/text";
+
+import { palette } from "../theme";
+import { Text } from "../views/shared";
 
 /*
   1. Create the config
@@ -61,7 +62,7 @@ export const toastConfig = {
       {/* <Text style={{ color: "white", fontSize: 15 }}>
             They will be passed when calling the `show` method (see below)
           </Text> */}
-      <Text style={{ color: "black", fontSize: 15 }}>{text1}</Text>
+      <Text style={{ color: "white", fontSize: 15 }}>{text1}</Text>
 
       {/* <Text>{props.uuid}</Text> */}
     </View>
@@ -75,7 +76,7 @@ export const toastConfig = {
         // paddingTop: 25,
         width: Dimensions.get("screen").width,
         // margin: 10,
-        backgroundColor: palette.main.red,
+        backgroundColor: palette.notification.error,
         borderRadius: 0,
         flexDirection: "column",
         justifyContent: "flex-end",

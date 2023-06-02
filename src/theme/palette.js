@@ -38,4 +38,8 @@ export const palette = {
     connected: "#0962EA",
     disabled: "#BFBFBF",
   },
+  notification: {
+    error: "#e02020",
+    success: "#39B98B",
+  },
 };

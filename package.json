@@ -39,7 +39,9 @@
     "react-native-webview": "11.26.0",
     "yup": "^1.2.0",
     "expo-barcode-scanner": "~12.3.2",
-    "expo-crypto": "~12.2.1"
+    "expo-crypto": "~12.2.1",
+    "expo-system-ui": "~2.2.1",
+    "expo-linking": "~4.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

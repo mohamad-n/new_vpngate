@@ -1,6 +1,6 @@
-import {theme} from '../../../theme';
+import { palette } from "../../../theme";
 
-export const tosContent = isDarkMode => {
+export const tosContent = (isDarkMode) => {
   return `
         <!DOCTYPE html>
 <html lang="en">
@@ -11,7 +11,7 @@ export const tosContent = isDarkMode => {
     <style>
     body {
         background-color : ${
-          isDarkMode ? theme.dark.mainBackground : theme.light.mainBackground
+          isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground
         };
         font-family: Arial, Helvetica, sans-serif;
         margin: auto;
@@ -20,25 +20,25 @@ export const tosContent = isDarkMode => {
     p {
         // font-size: 1rem;
         // line-height:10px;
-        color:${isDarkMode ? theme.dark.subTitle : theme.light.subTitle}
+        color:${isDarkMode ? palette.dark.subTitle : palette.light.subTitle}
     }
     
     li {
         // font-size: 3rem;
         margin-bottom:30px;
-        color:${isDarkMode ? theme.dark.subTitle : theme.light.subTitle}
+        color:${isDarkMode ? palette.dark.subTitle : palette.light.subTitle}
     }
     
     ul {
         line-height:1.7rem;
     //    text-align: justify; 
-    color:${isDarkMode ? theme.dark.subTitle : theme.light.subTitle}
+    color:${isDarkMode ? palette.dark.subTitle : palette.light.subTitle}
     
     }
     
     h4{
         font-size:1.2rem;
-        color:${isDarkMode ? theme.dark.title : theme.light.title}
+        color:${isDarkMode ? palette.dark.title : palette.light.title}
 
     }
     .policy_page {
@@ -46,7 +46,7 @@ export const tosContent = isDarkMode => {
         flex-direction: column;
         align-items: center;
         background-color : ${
-          isDarkMode ? theme.dark.mainBackground : theme.light.mainBackground
+          isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground
         }
     }
     

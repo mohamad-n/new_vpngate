@@ -7,6 +7,7 @@ export const FormField = (props) => {
   const isDarkMode = useColorScheme() === "dark";
 
   const {
+    secureTextEntry,
     containerExtraStyle,
     extraStyle,
     extraErrorStyle,
@@ -32,10 +33,15 @@ export const FormField = (props) => {
       <TextInput
         style={[
           styles.textInput,
-          { borderColor: palette[isDarkMode ? "dark" : "light"].border },
+          {
+            borderColor: palette[isDarkMode ? "dark" : "light"].border,
+            backgroundColor: "transparent",
+            color: palette[isDarkMode ? "dark" : "light"].title,
+          },
           extraStyle,
           hasError && styles.errorInput,
         ]}
+        secureTextEntry={secureTextEntry}
         value={value}
         editable={editable}
         onChangeText={(text) => onChange(name)(lowerCased ? text?.toLowerCase() : text)}
@@ -54,7 +60,7 @@ const styles = StyleSheet.create({
   textInput: {
     height: 50,
     marginVertical: 4,
-    backgroundColor: "#fff",
+
     fontSize: 16,
     borderWidth: 1,
 

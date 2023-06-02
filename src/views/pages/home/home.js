@@ -25,7 +25,7 @@ import { request } from "../../../service/public.service";
 
 import { SharedHeader } from "../../shared";
 import { LoaderContext } from "../../../providers/Loader.Provider";
-import { ServiceContext, VpsContext } from "../../../providers";
+import { ServiceContext, SubscriptionContext, VpsContext } from "../../../providers";
 
 //----------android---------
 // import { ConnectContext } from "../../../providers/ConnectShareAndroid";
@@ -44,13 +44,17 @@ import {
 // import axios from "axios";
 // import { SmartConnect } from "./smart.connect";
 import { palette } from "../../../theme";
+import { useFocusEffect } from "@react-navigation/native";
+import { HomeBadgeState } from "./home.badge.state";
 
 export const Home = ({ navigation }) => {
   //
   const { setIsLoading } = React.useContext(LoaderContext);
 
-  const { checkSubscriptionInfo, isSmartConnectAvailable, prepareToCheckActivationCode } =
-    React.useContext(ServiceContext);
+  const isSmartConnectAvailable = () => {
+    return false;
+  };
+  const { checkSubscription } = React.useContext(SubscriptionContext);
 
   // const { connect, disconnect, connectStatus } = React.useContext(ConnectContext);
   const { selectedVps } = React.useContext(VpsContext);
@@ -60,6 +64,13 @@ export const Home = ({ navigation }) => {
 
   const [timerIsStopped, setTimerIsStopped] = React.useState(true);
   const [addProfileModal, setAddProfileModal] = React.useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      checkSubscription();
+      return () => {};
+    }, [])
+  );
 
   // React.useEffect(() => {
   //   if (connectStatus === "CONNECTED") {
@@ -507,6 +518,7 @@ export const Home = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <HomeBadgeState />
     </SafeAreaView>
   );
 };
