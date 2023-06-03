@@ -12,6 +12,7 @@ import { palette } from "../theme";
 import { Setting } from "./pages/setting";
 import { NotificationBoard } from "./pages/news";
 import { SignUp, SignIn } from "./pages/credential";
+import { PrivateLocation } from "./pages/private.location";
 
 const HomeMainStackInternalNavigation = createStackNavigator();
 
@@ -27,6 +28,11 @@ function HomeInternalStackScreen() {
         options={{ headerShown: false }}
         name="Location"
         component={Location}
+      />
+      <HomeMainStackInternalNavigation.Screen
+        options={{ headerShown: false }}
+        name="PrivateLocation"
+        component={PrivateLocation}
       />
     </HomeMainStackInternalNavigation.Navigator>
   );

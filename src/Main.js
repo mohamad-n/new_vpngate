@@ -3,7 +3,7 @@ import { LoaderProvider, VpsProvider, SubscriptionProvider } from "./providers";
 import Toast from "react-native-toast-message";
 
 //------ ios ------
-//  import {ConnectProvider} from './providers/ConnectShare';
+// import { ConnectProvider } from "./providers/ConnectShare";
 
 //------android -----
 // import {ConnectProvider} from './providers/ConnectShareAndroid';
@@ -13,9 +13,8 @@ import { toastConfig } from "./config/toast.config";
 export const Main = () => {
   return (
     // <AppStateProvider>
-    //   <LoaderProvider>
-    //      <ConnectProvider>
-    //     <ServiceProvider>
+
+    //  <ConnectProvider>
 
     <LoaderProvider>
       <VpsProvider>
@@ -30,9 +29,8 @@ export const Main = () => {
       </VpsProvider>
     </LoaderProvider>
 
-    //       </ServiceProvider>
-    //       </ConnectProvider>
-    //    </LoaderProvider>
+    // {/* </ConnectProvider> */}
+
     // </AppStateProvider>
   );
 };

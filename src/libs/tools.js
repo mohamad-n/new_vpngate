@@ -177,3 +177,13 @@ export const isRemoteNewer = (remoteVersion, currentVersion) => {
   }
   return false;
 };
+
+const groupBy = (xs, f) => {
+  return xs.reduce((r, v, i, a, k = f(v)) => ((r[k] || (r[k] = [])).push(v), r), {});
+};
+export const groupServer = (allLocations) => {
+  const availableObjectArray = groupBy(allLocations, (v) => v.countryName);
+  return Object.keys(availableObjectArray).map((key) => {
+    return { title: key, data: availableObjectArray[key] };
+  });
+};

@@ -1,16 +1,21 @@
+/* eslint-disable react-native/no-inline-styles */
 import * as React from "react";
 import {
+  Button,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
+  Dimensions,
   FlatList,
   Platform,
+  Alert,
+  Linking,
   SafeAreaView,
   useColorScheme,
+  ImageBackground,
   useWindowDimensions,
-  SectionList,
 } from "react-native";
 
 import {
@@ -25,20 +30,16 @@ import { palette, theme } from "../../../theme";
 import { SharedHeader } from "../../shared";
 import { publicService } from "../../../service";
 
-const tabTitles = ["All", "By Country", "Last Locations"];
-export const Location = ({ navigation }) => {
-  // const { changeDefaultVps } = React.useContext(ServiceContext);
+export const PrivateLocation = ({ navigation }) => {
   const { setIsLoading } = React.useContext(LoaderContext);
-  const { vpsList, getDefaultVps, changeDefaultVps, selectedVps, groupedVps, lastLocations } =
-    React.useContext(VpsContext);
-  const [currentTab, setCurrentTab] = React.useState(0);
+  const { vpsList, getDefaultVps, changeDefaultVps, selectedVps } = React.useContext(VpsContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const { width } = useWindowDimensions();
 
   const selectVps = async (vps) => {
     try {
-      changeDefaultVps(vps);
+      changeDefaultVps(vps, "private");
       navigation.navigate("Home");
     } catch (error) {
       // console.log('error ====> ', error);
@@ -53,13 +54,17 @@ export const Location = ({ navigation }) => {
   const getVpsList = async () => {
     try {
       setIsLoading("getting server list");
-      const list = await publicService.sendRequest({ method: "GET", url: "/vps/public/list" });
+      const list = await publicService.sendRequest({
+        method: "GET",
+        url: "/vps/available",
+        hasAuth: true,
+      });
       if (!list?.length) {
         setIsLoading(false);
         throw new Error("can not fetch server list");
       }
-      // console.log(">>>>>>>>>>>", list);
-      await getDefaultVps(list);
+
+      await getDefaultVps(list.map((_) => ({ ..._, type: "private" }), "private"));
 
       // setSelectedVps(defaultVps);
 
@@ -76,15 +81,14 @@ export const Location = ({ navigation }) => {
         onPress={() => selectVps(item)}
         style={styles({ theme, isDarkMode, width }).flatList.MainView}
       >
-        <Image
+        {/* <Image
           style={styles({ theme, isDarkMode, width }).flatList.flagImage}
           source={item?.flagImage ? { uri: getImage(item?.flagImage) } : flagPlaceHolder}
-        />
+        /> */}
         <View style={styles({ theme, isDarkMode, width }).flatList.description}>
           <Text style={styles({ theme, isDarkMode, width }).flatList.countryName}>
-            {item?.countryName}
+            {item?.name}
           </Text>
-          <Text style={styles({ theme, isDarkMode, width }).flatList.ip}> {item?.ip}</Text>
         </View>
         <View style={styles({ theme, isDarkMode, width }).flatList.signView}>
           <Image
@@ -103,96 +107,17 @@ export const Location = ({ navigation }) => {
     );
   };
 
-  const changeTab = (index) => {
-    setCurrentTab(index);
-  };
   return (
     <SafeAreaView style={styles({ theme, isDarkMode }).mainView}>
       <SharedHeader hasBack navigation={navigation} title=" Select Location" />
       <View style={styles({ theme, isDarkMode }).outerView}>
-        <View style={styles({ isDarkMode, width }).tabs.buttonsContainer}>
-          {tabTitles?.map((title, index) => (
-            <TouchableOpacity
-              key={index}
-              onPress={() => changeTab(index)}
-              style={[
-                styles({ isDarkMode, width }).tabs.button,
-                currentTab === index
-                  ? {
-                      backgroundColor: palette.commonButtonBackground,
-                      borderWidth: 0,
-                    }
-                  : {
-                      backgroundColor: "transparent",
-                      borderColor: palette.commonButtonBackground,
-                      borderWidth: 1,
-                      borderEndWidth: 0,
-                      borderStartWidth: index == 0 ? 0 : 1,
-                    },
-              ]}
-            >
-              <Text
-                style={[
-                  styles({ isDarkMode, width }).tabs.buttonText,
-                  currentTab === index
-                    ? { color: "white" }
-                    : {
-                        color: isDarkMode ? palette.dark.title : palette.commonButtonBackground,
-                      },
-                ]}
-              >
-                {title}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
         <View style={styles({ theme, isDarkMode }).innerView}>
-          {currentTab === 0 && (
-            <FlatList
-              data={vpsList}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              extraData={null}
-            />
-          )}
-          {currentTab === 1 && groupedVps && (
-            <SectionList
-              sections={groupedVps}
-              keyExtractor={(item, index) => item + index}
-              renderItem={renderItem}
-              renderSectionHeader={({ section: { title } }) => (
-                <View
-                  style={{
-                    backgroundColor: isDarkMode
-                      ? palette.dark.mainBackground
-                      : palette.light.mainBackground,
-                    padding: 20,
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: isDarkMode ? palette.dark.title : palette.light.title,
-                      fontSize: 20,
-                    }}
-                  >
-                    {title}
-                  </Text>
-                </View>
-              )}
-            />
-          )}
-
-          {currentTab === 2 && lastLocations && (
-            <FlatList
-              data={lastLocations}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              extraData={null}
-            />
-          )}
+          <FlatList
+            data={vpsList}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            extraData={null}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -265,10 +190,7 @@ const styles = ({ theme, isDarkMode, width = null }) =>
         fontSize: 17,
         color: isDarkMode ? palette.dark.title : palette.light.title,
       },
-      ip: {
-        fontSize: 12,
-        color: isDarkMode ? palette.dark.subTitle : palette.light.subTitle,
-      },
+
       signView: {
         flexDirection: "row",
 
@@ -286,25 +208,5 @@ const styles = ({ theme, isDarkMode, width = null }) =>
         marginLeft: 10,
         tintColor: isDarkMode ? palette.dark.title : palette.light.title,
       },
-    },
-    tabs: {
-      buttonsContainer: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "flex-start",
-        paddingTop: 10,
-      },
-      button: {
-        width: "33%",
-        height: 40,
-        borderRadius: 0,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: isDarkMode
-          ? palette.dark.buttonBackground
-          : palette.light.buttonBackground,
-      },
-      buttonText: {},
     },
   });

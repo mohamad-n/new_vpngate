@@ -1,13 +1,13 @@
 import * as React from "react";
-import * as Device from "expo-device";
-import * as Localization from "expo-localization";
-import * as Crypto from "expo-crypto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { groupServer } from "../libs";
 const VpsContext = React.createContext();
 
 const VpsProvider = ({ children }) => {
   const [vpsList, setVpsList] = React.useState();
   const [selectedVps, setSelectedVps] = React.useState();
+  const [groupedVps, setGroupedVps] = React.useState();
+  const [lastLocations, setLastLocations] = React.useState();
 
   React.useEffect(() => {
     getDefaultVps();
@@ -15,13 +15,15 @@ const VpsProvider = ({ children }) => {
     return () => {};
   }, []);
 
-  const changeDefaultVps = async (vps) => {
+  const changeDefaultVps = async (vps, type) => {
     await AsyncStorage.setItem("@selectedVps", JSON.stringify(vps));
     setSelectedVps(vps);
-    // getDefaultVps();
+    if (type !== "private") {
+      createLastLocations(vps);
+    }
   };
 
-  const getDefaultVps = (list) => {
+  const getDefaultVps = (list, type) => {
     return new Promise(async (resolve) => {
       const stringifyVps = await AsyncStorage.getItem("@selectedVps");
       const savedVps = JSON.parse(stringifyVps);
@@ -33,6 +35,10 @@ const VpsProvider = ({ children }) => {
         return resolve();
       }
       setVpsList(list);
+      if (type !== "private") {
+        createGroupedVps(list);
+        updateLastLocations();
+      }
       if (savedVps) {
         const savedVpsIsOnList = list.find((_) => savedVps.uuid === _.uuid);
         if (!savedVpsIsOnList) {
@@ -50,11 +56,57 @@ const VpsProvider = ({ children }) => {
     });
   };
 
+  const createGroupedVps = (list) => {
+    const grouped = groupServer(list);
+    setGroupedVps(grouped);
+    // console.log(">>>>>>>>>>>", grouped);
+  };
+
+  const createLastLocations = async (vps) => {
+    // await AsyncStorage.removeItem("@lastLocations");
+
+    const lasLocations = await AsyncStorage.getItem("@lastLocations");
+
+    if (lasLocations && JSON.parse(lasLocations)) {
+      const lastLocationsArray = JSON.parse(lasLocations);
+      const updatedLastLocations = [
+        vps,
+        ...lastLocationsArray.filter((_) => _?.uuid !== vps?.uuid),
+      ];
+      await AsyncStorage.setItem(
+        "@lastLocations",
+        JSON.stringify(updatedLastLocations.slice(0, 10))
+      );
+
+      setLastLocations(updatedLastLocations.slice(0, 10));
+      return;
+    }
+    await AsyncStorage.setItem("@lastLocations", JSON.stringify([vps]));
+    setLastLocations([vps]);
+  };
+
+  const updateLastLocations = async () => {
+    // await AsyncStorage.removeItem("@lastLocations");
+
+    const lasLocations = await AsyncStorage.getItem("@lastLocations");
+
+    if (lasLocations && JSON.parse(lasLocations)) {
+      const lastLocationsArray = JSON.parse(lasLocations);
+
+      await AsyncStorage.setItem("@lastLocations", JSON.stringify(lastLocationsArray.slice(0, 10)));
+
+      setLastLocations(lastLocationsArray.slice(0, 10));
+      return;
+    }
+    setLastLocations([]);
+  };
   const contextValue = {
     selectedVps,
     getDefaultVps,
     changeDefaultVps,
     vpsList,
+    groupedVps,
+    lastLocations,
   };
   return <VpsContext.Provider value={contextValue}>{children}</VpsContext.Provider>;
 };

@@ -46,6 +46,7 @@ import { palette } from "../../../theme";
 import { useFocusEffect } from "@react-navigation/native";
 import { HomeBadgeState } from "./home.badge.state";
 import { AddProfileModal } from "./add.profile/add.profile.modal";
+import { SelectLocationButton } from "./select.location";
 
 export const Home = ({ navigation }) => {
   //
@@ -55,7 +56,7 @@ export const Home = ({ navigation }) => {
   const isSmartConnectAvailable = () => {
     return false;
   };
-  const { checkSubscription } = React.useContext(SubscriptionContext);
+  const { checkSubscription, hasSubscription } = React.useContext(SubscriptionContext);
 
   // const { connect, disconnect, connectStatus } = React.useContext(ConnectContext);
   const { selectedVps } = React.useContext(VpsContext);
@@ -313,94 +314,10 @@ export const Home = ({ navigation }) => {
                 color: isDarkMode ? palette.dark.title : palette.light.title,
               }}
             >
-              {isSmartConnectAvailable() ? "" : "Select Location"}
+              Select Location
             </Text>
-            {isSmartConnectAvailable() ? (
-              <Text>tt</Text>
-            ) : (
-              // <SmartConnect />
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Location")}
-                style={{
-                  marginHorizontal: 20,
-                  height: 70,
-                  borderRadius: 20,
 
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-around",
-                  alignSelf: "stretch",
-                  backgroundColor: isDarkMode
-                    ? palette.dark.mainBackground
-                    : palette.light.mainBackground,
-                  shadowColor: isDarkMode ? palette.dark.shadowColor : palette.light.shadowColor,
-                  shadowOffset: { width: 0, height: 0 },
-                  shadowOpacity: 9,
-                  shadowRadius: 4,
-                  ...(Platform.OS === "android" && {
-                    borderWidth: 1,
-                    borderColor: palette.disabledColor,
-                  }),
-                }}
-              >
-                {!selectedVps ? (
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      color: isDarkMode ? palette.dark.title : palette.light.title,
-                    }}
-                  >
-                    Tap here to select a location
-                  </Text>
-                ) : (
-                  <>
-                    <Image
-                      // resizeMode="cover"
-                      style={{
-                        borderRadius: 5,
-                        width: 40,
-                        height: 28,
-                        borderColor: isDarkMode ? palette.dark.border : palette.light.border,
-                        borderWidth: 1,
-                      }}
-                      source={
-                        selectedVps?.flagImage
-                          ? { uri: getImage(selectedVps?.flagImage) }
-                          : flagPlaceHolder
-                      }
-                    />
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        alignSelf: "stretch",
-                        justifyContent: "space-around",
-                        alignItems: "flex-start",
-                        marginVertical: 10,
-                        flex: 0.6,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 17,
-                          color: isDarkMode ? palette.dark.title : palette.light.title,
-                        }}
-                      >
-                        {selectedVps?.countryName}
-                      </Text>
-                    </View>
-                    <Image
-                      resizeMode="cover"
-                      style={{
-                        width: 15,
-                        height: 15,
-                        tintColor: isDarkMode ? palette.dark.title : palette.light.title,
-                      }}
-                      source={dropDownIcon}
-                    />
-                  </>
-                )}
-              </TouchableOpacity>
-            )}
+            <SelectLocationButton navigation={navigation} />
           </View>
           <View
             style={{
