@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,7 +15,44 @@
 		B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		C005DE6D189E43DD90D11AA2 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A1064C27D41E4B75C4C2A /* noop-file.swift */; };
+		D1CAA4DA2A2BE256009BC7E4 /* openssl-apple in Resources */ = {isa = PBXBuildFile; fileRef = D1CAA4D62A2BE256009BC7E4 /* openssl-apple */; };
+		D1CAA4DB2A2BE256009BC7E4 /* tunnel in Resources */ = {isa = PBXBuildFile; fileRef = D1CAA4D72A2BE256009BC7E4 /* tunnel */; };
+		D1CAA4DC2A2BE256009BC7E4 /* SwiftyBeaver in Resources */ = {isa = PBXBuildFile; fileRef = D1CAA4D82A2BE256009BC7E4 /* SwiftyBeaver */; };
+		D1CAA4DD2A2BE256009BC7E4 /* wireguard-apple in Resources */ = {isa = PBXBuildFile; fileRef = D1CAA4D92A2BE256009BC7E4 /* wireguard-apple */; };
+		D1CAA4E12A2BE4EA009BC7E4 /* TunnelKitOpenVPN in Frameworks */ = {isa = PBXBuildFile; productRef = D1CAA4E02A2BE4EA009BC7E4 /* TunnelKitOpenVPN */; };
+		D1CAA4E72A2BE701009BC7E4 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D1CAA4C12A2BDFDB009BC7E4 /* NetworkExtension.framework */; };
+		D1CAA4EA2A2BE702009BC7E4 /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CAA4E92A2BE702009BC7E4 /* PacketTunnelProvider.swift */; };
+		D1CAA4EF2A2BE702009BC7E4 /* openextesion.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D1CAA4E62A2BE701009BC7E4 /* openextesion.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D1CAA4F42A2BE788009BC7E4 /* TunnelKitOpenVPNAppExtension in Frameworks */ = {isa = PBXBuildFile; productRef = D1CAA4F32A2BE788009BC7E4 /* TunnelKitOpenVPNAppExtension */; };
+		D1CAA4F62A2BE90A009BC7E4 /* ConnectShare.m in Sources */ = {isa = PBXBuildFile; fileRef = D1CAA4F52A2BE90A009BC7E4 /* ConnectShare.m */; };
+		D1CAA4F82A2BE984009BC7E4 /* ConnectShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CAA4F72A2BE984009BC7E4 /* ConnectShare.swift */; };
+		D1CAA4FA2A2BE9BF009BC7E4 /* connectController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CAA4F92A2BE9BF009BC7E4 /* connectController.swift */; };
+		D1CAA4FC2A2BE9F0009BC7E4 /* configurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1CAA4FB2A2BE9F0009BC7E4 /* configurator.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D1CAA4ED2A2BE702009BC7E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D1CAA4E52A2BE701009BC7E4;
+			remoteInfo = openextesion;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D1CAA4CB2A2BDFDB009BC7E4 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				D1CAA4EF2A2BE702009BC7E4 /* openextesion.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
@@ -31,6 +68,19 @@
 		7A4D352CD337FB3A3BF06240 /* Pods-VPNGATE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VPNGATE.release.xcconfig"; path = "Target Support Files/Pods-VPNGATE/Pods-VPNGATE.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = VPNGATE/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		D1CAA4C12A2BDFDB009BC7E4 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
+		D1CAA4D62A2BE256009BC7E4 /* openssl-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "openssl-apple"; sourceTree = "<group>"; };
+		D1CAA4D72A2BE256009BC7E4 /* tunnel */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = tunnel; sourceTree = "<group>"; };
+		D1CAA4D82A2BE256009BC7E4 /* SwiftyBeaver */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SwiftyBeaver; sourceTree = "<group>"; };
+		D1CAA4D92A2BE256009BC7E4 /* wireguard-apple */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = "wireguard-apple"; sourceTree = "<group>"; };
+		D1CAA4E62A2BE701009BC7E4 /* openextesion.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = openextesion.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D1CAA4E92A2BE702009BC7E4 /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
+		D1CAA4EB2A2BE702009BC7E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D1CAA4EC2A2BE702009BC7E4 /* openextesion.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = openextesion.entitlements; sourceTree = "<group>"; };
+		D1CAA4F52A2BE90A009BC7E4 /* ConnectShare.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConnectShare.m; sourceTree = "<group>"; };
+		D1CAA4F72A2BE984009BC7E4 /* ConnectShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectShare.swift; sourceTree = "<group>"; };
+		D1CAA4F92A2BE9BF009BC7E4 /* connectController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = connectController.swift; sourceTree = "<group>"; };
+		D1CAA4FB2A2BE9F0009BC7E4 /* configurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = configurator.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-VPNGATE/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -40,7 +90,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1CAA4E12A2BE4EA009BC7E4 /* TunnelKitOpenVPN in Frameworks */,
 				96905EF65AED1B983A6B3ABC /* libPods-VPNGATE.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1CAA4E32A2BE701009BC7E4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1CAA4F42A2BE788009BC7E4 /* TunnelKitOpenVPNAppExtension in Frameworks */,
+				D1CAA4E72A2BE701009BC7E4 /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +119,10 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
 				6E3A1064C27D41E4B75C4C2A /* noop-file.swift */,
+				D1CAA4F52A2BE90A009BC7E4 /* ConnectShare.m */,
+				D1CAA4F72A2BE984009BC7E4 /* ConnectShare.swift */,
+				D1CAA4FB2A2BE9F0009BC7E4 /* configurator.swift */,
+				D1CAA4F92A2BE9BF009BC7E4 /* connectController.swift */,
 			);
 			name = VPNGATE;
 			sourceTree = "<group>";
@@ -68,6 +132,7 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				58EEBF8E8E6FB1BC6CAF49B5 /* libPods-VPNGATE.a */,
+				D1CAA4C12A2BDFDB009BC7E4 /* NetworkExtension.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -82,8 +147,10 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D1CAA4CF2A2BE1DD009BC7E4 /* Packages */,
 				13B07FAE1A68108700A75B9A /* VPNGATE */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
+				D1CAA4E82A2BE701009BC7E4 /* openextesion */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
@@ -98,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* VPNGATE.app */,
+				D1CAA4E62A2BE701009BC7E4 /* openextesion.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +185,35 @@
 			);
 			name = Supporting;
 			path = VPNGATE/Supporting;
+			sourceTree = "<group>";
+		};
+		D1CAA4CF2A2BE1DD009BC7E4 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				D1CAA4D52A2BE256009BC7E4 /* packages */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		D1CAA4D52A2BE256009BC7E4 /* packages */ = {
+			isa = PBXGroup;
+			children = (
+				D1CAA4D62A2BE256009BC7E4 /* openssl-apple */,
+				D1CAA4D72A2BE256009BC7E4 /* tunnel */,
+				D1CAA4D82A2BE256009BC7E4 /* SwiftyBeaver */,
+				D1CAA4D92A2BE256009BC7E4 /* wireguard-apple */,
+			);
+			path = packages;
+			sourceTree = "<group>";
+		};
+		D1CAA4E82A2BE701009BC7E4 /* openextesion */ = {
+			isa = PBXGroup;
+			children = (
+				D1CAA4E92A2BE702009BC7E4 /* PacketTunnelProvider.swift */,
+				D1CAA4EB2A2BE702009BC7E4 /* Info.plist */,
+				D1CAA4EC2A2BE702009BC7E4 /* openextesion.entitlements */,
+			);
+			path = openextesion;
 			sourceTree = "<group>";
 		};
 		D65327D7A22EEC0BE12398D9 /* Pods */ = {
@@ -151,15 +248,40 @@
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
 				0C910889E33D0548A40B1A6E /* [CP] Embed Pods Frameworks */,
+				D1CAA4CB2A2BDFDB009BC7E4 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D1CAA4EE2A2BE702009BC7E4 /* PBXTargetDependency */,
+			);
+			name = VPNGATE;
+			packageProductDependencies = (
+				D1CAA4E02A2BE4EA009BC7E4 /* TunnelKitOpenVPN */,
+			);
+			productName = VPNGATE;
+			productReference = 13B07F961A680F5B00A75B9A /* VPNGATE.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D1CAA4E52A2BE701009BC7E4 /* openextesion */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1CAA4F02A2BE702009BC7E4 /* Build configuration list for PBXNativeTarget "openextesion" */;
+			buildPhases = (
+				D1CAA4E22A2BE701009BC7E4 /* Sources */,
+				D1CAA4E32A2BE701009BC7E4 /* Frameworks */,
+				D1CAA4E42A2BE701009BC7E4 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = VPNGATE;
-			productName = VPNGATE;
-			productReference = 13B07F961A680F5B00A75B9A /* VPNGATE.app */;
-			productType = "com.apple.product-type.application";
+			name = openextesion;
+			packageProductDependencies = (
+				D1CAA4F32A2BE788009BC7E4 /* TunnelKitOpenVPNAppExtension */,
+			);
+			productName = openextesion;
+			productReference = D1CAA4E62A2BE701009BC7E4 /* openextesion.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -167,11 +289,15 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1130;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = CG2DAUAMYR;
 						LastSwiftMigration = 1250;
+					};
+					D1CAA4E52A2BE701009BC7E4 = {
+						CreatedOnToolsVersion = 14.2;
 					};
 				};
 			};
@@ -189,6 +315,7 @@
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* VPNGATE */,
+				D1CAA4E52A2BE701009BC7E4 /* openextesion */,
 			);
 		};
 /* End PBXProject section */
@@ -198,9 +325,20 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1CAA4DB2A2BE256009BC7E4 /* tunnel in Resources */,
+				D1CAA4DA2A2BE256009BC7E4 /* openssl-apple in Resources */,
+				D1CAA4DD2A2BE256009BC7E4 /* wireguard-apple in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				D1CAA4DC2A2BE256009BC7E4 /* SwiftyBeaver in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1CAA4E42A2BE701009BC7E4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,20 +451,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D1CAA4FC2A2BE9F0009BC7E4 /* configurator.swift in Sources */,
+				D1CAA4F82A2BE984009BC7E4 /* ConnectShare.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				D1CAA4FA2A2BE9BF009BC7E4 /* connectController.swift in Sources */,
+				D1CAA4F62A2BE90A009BC7E4 /* ConnectShare.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,
 				C005DE6D189E43DD90D11AA2 /* noop-file.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		D1CAA4E22A2BE701009BC7E4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1CAA4EA2A2BE702009BC7E4 /* PacketTunnelProvider.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D1CAA4EE2A2BE702009BC7E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D1CAA4E52A2BE701009BC7E4 /* openextesion */;
+			targetProxy = D1CAA4ED2A2BE702009BC7E4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6C2E3173556A471DD304B334 /* Pods-VPNGATE.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = VPNGATE/VPNGATE.entitlements;
@@ -338,9 +497,13 @@
 					"FB_SONARKIT_ENABLED=1",
 				);
 				INFOPLIST_FILE = VPNGATE/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = VPNGate;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -360,15 +523,20 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A4D352CD337FB3A3BF06240 /* Pods-VPNGATE.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = VPNGATE/VPNGATE.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = CG2DAUAMYR;
 				INFOPLIST_FILE = VPNGATE/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = VPNGate;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -432,7 +600,10 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -483,12 +654,95 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				LD_RUNPATH_SEARCH_PATHS = "/usr/lib/swift $(inherited)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					/usr/lib/swift,
+					"$(inherited)",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D1CAA4F12A2BE702009BC7E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = openextesion/openextesion.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = CG2DAUAMYR;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = openextesion/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = openextesion;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = online.vpngate.app.ios.openextesion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D1CAA4F22A2BE702009BC7E4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = openextesion/openextesion.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = CG2DAUAMYR;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = openextesion/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = openextesion;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.2.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = online.vpngate.app.ios.openextesion;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -513,7 +767,27 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		D1CAA4F02A2BE702009BC7E4 /* Build configuration list for PBXNativeTarget "openextesion" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D1CAA4F12A2BE702009BC7E4 /* Debug */,
+				D1CAA4F22A2BE702009BC7E4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D1CAA4E02A2BE4EA009BC7E4 /* TunnelKitOpenVPN */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TunnelKitOpenVPN;
+		};
+		D1CAA4F32A2BE788009BC7E4 /* TunnelKitOpenVPNAppExtension */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TunnelKitOpenVPNAppExtension;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }

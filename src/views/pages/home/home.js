@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
 import * as React from "react";
 import {
   Text,
@@ -13,35 +11,11 @@ import {
   useWindowDimensions,
   Platform,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import NetInfo from "@react-native-community/netinfo";
-// import { BottomModal, ModalContent, SlideAnimation, ModalTitle } from "react-native-modals";
-// import { encode } from "base-64";
-
 import { backgroundDots } from "../../../asset/img";
-import { dropDownIcon, flagPlaceHolder, triggerIcon } from "../../../asset/img/icon";
-import { request } from "../../../service/public.service";
-
+import { triggerIcon } from "../../../asset/img/icon";
 import { SharedHeader } from "../../shared";
 import { LoaderContext } from "../../../providers/Loader.Provider";
-import { ServiceContext, SubscriptionContext, VpsContext } from "../../../providers";
-
-//----------android---------
-// import { ConnectContext } from "../../../providers/ConnectShareAndroid";
-//----------ios---------
-// import {ConnectContext} from '../../../providers/ConnectShare';
-
-// import Timer from "../../shared/timer";
-import {
-  getImage,
-  validateCodeFormat,
-  validateIncomingProfile,
-  validateLinkFormat,
-} from "../../../libs/tools";
-// import { decrypt } from "../../../libs";
-// import { AddProfile } from "./add.profile";
-// import axios from "axios";
-// import { SmartConnect } from "./smart.connect";
+import { SubscriptionContext, VpsContext } from "../../../providers";
 import { palette } from "../../../theme";
 import { useFocusEffect } from "@react-navigation/native";
 import { HomeBadgeState } from "./home.badge.state";
@@ -56,7 +30,8 @@ export const Home = ({ navigation }) => {
   const isSmartConnectAvailable = () => {
     return false;
   };
-  const { checkSubscription, hasSubscription } = React.useContext(SubscriptionContext);
+  const { checkSubscription, hasSubscription, getConnectionProfile } =
+    React.useContext(SubscriptionContext);
 
   const { selectedVps } = React.useContext(VpsContext);
 
@@ -103,7 +78,7 @@ export const Home = ({ navigation }) => {
     return true;
   };
 
-  const connectButtonAction = () => {
+  const connectButtonAction = async () => {
     if (!selectedVps) {
       if (hasSubscription) {
         navigation.navigate("PrivateLocation");
@@ -112,8 +87,12 @@ export const Home = ({ navigation }) => {
       navigation.navigate("Location");
       return;
     }
-
-    console.log(">>>>>>>>>>>", "connect");
+    try {
+      const profile = await getConnectionProfile(selectedVps);
+      console.log(">>>>>>>>>>>", profile);
+    } catch (error) {
+      console.log("get profile error : ", error);
+    }
   };
   return (
     <SafeAreaView

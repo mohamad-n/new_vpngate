@@ -16,12 +16,11 @@ import {
   validateCodeFormat,
 } from "../libs/tools";
 import { navigate, navigationRef } from "../views/navigation.ref";
-import { tempProfile } from "../asset/img/profiles/template";
 //-----android------
 // import { ConnectContext } from "./ConnectShareAndroid";
 import Constants from "expo-constants";
 import { LoaderContext } from "./Loader.Provider";
-import { getDeviceInfo, getNewDeviceInfo } from "../libs";
+import { decrypt, getDeviceInfo, getNewDeviceInfo } from "../libs";
 import Toast from "react-native-toast-message";
 import moment from "moment";
 import { ClientInactive } from "../views/pages/client.inactive";
@@ -30,8 +29,7 @@ import { UserNameModal } from "../views/shared/user.name.modal";
 import { UpdateVersionModal } from "../views/shared/update.version.modal";
 import { VpsContext } from "./vps.provider";
 
-//-------ios--------
-const { IOS_APP_VERSION, ANDROID_APP_VERSION } = Constants.expoConfig.extra;
+const { IOS_APP_VERSION, ANDROID_APP_VERSION, ENCRYPTION_KEY } = Constants.expoConfig.extra;
 const SubscriptionContext = React.createContext();
 
 const SubscriptionProvider = ({ children }) => {
@@ -414,11 +412,8 @@ const SubscriptionProvider = ({ children }) => {
         url: "/setting/version",
       });
       updateVersionInfo(versionInfo);
-      //   setIsLoading(false);
     } catch (error) {
       //   console.log("checkSubscription error : ", error);
-      //   setIsLoading(false);
-      // showAlert({ message: error?.message || error, type: "error" });
     }
   };
 
@@ -474,6 +469,38 @@ const SubscriptionProvider = ({ children }) => {
     }
   };
 
+  const getConnectionProfile = (selectedVps) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const encryptedProfile = hasSubscription
+          ? await publicService.sendRequest({
+              method: "GET",
+              url: `/profile/fetch/private`,
+              params: { uuid: selectedVps?.uuid },
+              hasAuth: true,
+            })
+          : await publicService.sendRequest({
+              method: "GET",
+              url: `/profile/fetch`,
+              params: { uuid: selectedVps?.uuid },
+            });
+
+        if (hasSubscription) {
+          return resolve();
+        }
+
+        const { certificate } = await decrypt(
+          encryptedProfile,
+          `${selectedVps?.uuid}-${ENCRYPTION_KEY}`
+        );
+
+        return resolve(certificate);
+      } catch (error) {
+        return reject(error);
+      }
+    });
+  };
+
   const contextValue = {
     register,
     userEmail,
@@ -484,6 +511,7 @@ const SubscriptionProvider = ({ children }) => {
     hasSubscription,
     checkUrl,
     updateAvailable,
+    getConnectionProfile,
   };
 
   return (

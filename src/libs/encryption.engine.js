@@ -1,7 +1,6 @@
 import CryptoJS from "react-native-crypto-js";
-import Constants from "expo-constants";
-const { ENCRYPTION_KEY } = Constants.expoConfig.extra;
-export const encrypt = (object) => {
+
+export const encrypt = (object, ENCRYPTION_KEY) => {
   return new Promise((resolve, reject) => {
     try {
       return resolve(CryptoJS.AES.encrypt(JSON.stringify(object), ENCRYPTION_KEY).toString());
@@ -11,7 +10,7 @@ export const encrypt = (object) => {
   });
 };
 
-export const decrypt = (text) => {
+export const decrypt = (text, ENCRYPTION_KEY) => {
   return new Promise((resolve, reject) => {
     try {
       var bytes = CryptoJS.AES.decrypt(text, ENCRYPTION_KEY);
