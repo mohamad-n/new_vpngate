@@ -28,6 +28,7 @@ import { ClientInactive } from "../views/pages/client.inactive";
 import { DeviceInactive } from "../views/pages/device.inactive";
 import { UserNameModal } from "../views/shared/user.name.modal";
 import { UpdateVersionModal } from "../views/shared/update.version.modal";
+import { VpsContext } from "./vps.provider";
 
 //-------ios--------
 const { IOS_APP_VERSION, ANDROID_APP_VERSION } = Constants.expoConfig.extra;
@@ -40,6 +41,7 @@ const SubscriptionProvider = ({ children }) => {
   const [voucherCode, setVoucherCode] = React.useState();
   const [versionInfo, setVersionInfo] = React.useState();
   const [updateAvailable, setUpdateAvailable] = React.useState();
+  const { clearDefaultVps } = React.useContext(VpsContext);
 
   const { setIsLoading } = React.useContext(LoaderContext);
   // const { disconnect, connectStatus, stablishConnection } = React.useContext(ConnectContext);
@@ -164,6 +166,7 @@ const SubscriptionProvider = ({ children }) => {
           type: "customSuccess",
           text1: "Successfully signed in",
         });
+        clearDefaultVps();
         return resolve();
       } catch (error) {
         console.log("signup error : ", error);
@@ -204,6 +207,8 @@ const SubscriptionProvider = ({ children }) => {
           type: "customSuccess",
           text1: "Successfully signed out",
         });
+        clearDefaultVps();
+
         return resolve();
       } catch (error) {
         Toast.show({

@@ -58,14 +58,10 @@ export const Home = ({ navigation }) => {
   };
   const { checkSubscription, hasSubscription } = React.useContext(SubscriptionContext);
 
-  // const { connect, disconnect, connectStatus } = React.useContext(ConnectContext);
   const { selectedVps } = React.useContext(VpsContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const { width } = useWindowDimensions();
-
-  const [timerIsStopped, setTimerIsStopped] = React.useState(true);
-  const [addProfileModal, setAddProfileModal] = React.useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -83,119 +79,6 @@ export const Home = ({ navigation }) => {
   //   }
   //   return () => {};
   // }, [connectStatus]);
-
-  const triggerConnection = async () => {
-    // try {
-    //   if (connectStatus !== "DISCONNECTED") {
-    //     disconnect();
-    //     return;
-    //   }
-    //   const { isConnected } = await NetInfo.fetch();
-    //   if (!isConnected) {
-    //     throw new Error("no network");
-    //   }
-    //   if (isSmartConnectAvailable()) {
-    //     setIsLoading("getting updated connection");
-    //     const savedCert = await AsyncStorage.getItem("@profileCert");
-    //     const { status, data } = await getSmartConnection(!savedCert);
-    //     if (status) {
-    //       if (data) {
-    //         const downloadedCert = await decrypt(data);
-    //         await AsyncStorage.setItem("@profileCert", downloadedCert);
-    //         // console.log('dowloaded cert connect');
-    //         connect(downloadedCert);
-    //         setIsLoading(false);
-    //         return;
-    //       }
-    //       // console.log('saved cert  connect');
-    //       connect(savedCert);
-    //       setIsLoading(false);
-    //       return;
-    //     }
-    //     setIsLoading(false);
-    //     checkSubscriptionInfo();
-    //     return;
-    //     // throw new Error('no network');
-    //   }
-    //   // console.log('normal connect');
-    //   setIsLoading("getting server connection info");
-    //   const certificateProfile = await getVpsProfile();
-    //   // console.log(certificateProfile);
-    //   // console.log(decode(certificateProfile));
-    //   setIsLoading(false);
-    //   if (!certificateProfile) {
-    //     throw new Error("no network");
-    //   }
-    //   connect(certificateProfile);
-    // } catch (error) {
-    //   setIsLoading(false);
-    //   if (Platform.OS === "ios") {
-    //     Alert.alert(
-    //       "Network Error",
-    //       "No network connection found. plaese make sure you have an active network connection",
-    //       [
-    //         {
-    //           text: "retry",
-    //           onPress: () => triggerConnection(),
-    //         },
-    //       ]
-    //     );
-    //   }
-    //   console.log("error : ", error);
-    // }
-  };
-
-  // const getSmartConnection = (download) => {
-  //   // console.log(download);
-  //   return new Promise(async (resolve) => {
-  //     try {
-  //       const idToken = await AsyncStorage.getItem("@idToken");
-
-  //       const result = await request(
-  //         "POST",
-  //         "/user/smart",
-  //         null,
-  //         { token: idToken, download },
-  //         "auth"
-  //       );
-  //       return resolve(result);
-  //     } catch (error) {
-  //       console.log("error : ", error);
-  //       return resolve({ status: false });
-  //     }
-  //   });
-  // };
-
-  // const getVpsProfile = () => {
-  //   if (!selectedVps) {
-  //     Alert.alert("No location selected", "please select a location and try again", [
-  //       {
-  //         text: "Close",
-  //         onPress: () => {},
-  //         style: "cancel",
-  //       },
-  //     ]);
-  //     return;
-  //   }
-  //   if (selectedVps?.id === -1) {
-  //     return selectedVps?.profileData;
-  //   }
-  //   return new Promise(async (resolve) => {
-  //     try {
-  //       const { profile } = await request(
-  //         "GET",
-  //         "/vps/app/profile",
-  //         { id: selectedVps?.id },
-  //         null,
-  //         "enc"
-  //       );
-  //       return resolve(profile);
-  //     } catch (error) {
-  //       console.log(error);
-  //       return resolve();
-  //     }
-  //   });
-  // };
 
   const getConnectButtonColor = () => {
     // if (connectStatus === "DISCONNECTED") {
@@ -220,6 +103,18 @@ export const Home = ({ navigation }) => {
     return true;
   };
 
+  const connectButtonAction = () => {
+    if (!selectedVps) {
+      if (hasSubscription) {
+        navigation.navigate("PrivateLocation");
+        return;
+      }
+      navigation.navigate("Location");
+      return;
+    }
+
+    console.log(">>>>>>>>>>>", "connect");
+  };
   return (
     <SafeAreaView
       style={{
@@ -247,42 +142,7 @@ export const Home = ({ navigation }) => {
           addButton
           addProfile={() => addProfileModalRef.current?.present()}
         />
-        {/* <BottomModal
-          visible={addProfileModal}
-          onSwipeOut={() => setAddProfileModal(false)}
-          onTouchOutside={() => setAddProfileModal(false)}
-          modalTitle={
-            <ModalTitle
-              style={{
-                backgroundColor: isDarkMode
-                  ? palette.dark.mainBackground
-                  : palette.light.mainBackground,
-              }}
-              textStyle={{
-                color: isDarkMode ? palette.dark.title : palette.light.title,
-              }}
-              title="Import Profile"
-            />
-          }
-          modalAnimation={
-            new SlideAnimation({
-              slideFrom: "bottom",
-            })
-          }
-          // swipeDirection={['up', 'down']} // can be string or an array
-          swipeThreshold={200}
-          width={1}
-          height={width < 500 ? 0.9 : 0.6}
-        >
-          <ModalContent
-            style={{
-              flex: 1,
-              backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
-            }}
-          >
-            <AddProfile checkProfileLink={checkProfileLink} />
-          </ModalContent>
-        </BottomModal> */}
+
         <View
           style={{
             flex: 1,
@@ -346,9 +206,8 @@ export const Home = ({ navigation }) => {
               style={{ alignSelf: "stretch" }}
             >
               <TouchableOpacity
-                onPress={() => triggerConnection()}
-                // onPress={() => setTimerIsStopped(!timerIsStopped)}
-                disabled={isConnectButtonDisabled()}
+                onPress={() => connectButtonAction()}
+                // disabled={isConnectButtonDisabled()}
                 style={{
                   flexDirection: "column",
                   alignSelf: "center",

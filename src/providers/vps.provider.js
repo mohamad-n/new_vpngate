@@ -23,6 +23,10 @@ const VpsProvider = ({ children }) => {
     }
   };
 
+  const clearDefaultVps = async () => {
+    await AsyncStorage.removeItem("@selectedVps");
+    setSelectedVps();
+  };
   const getDefaultVps = (list, type) => {
     return new Promise(async (resolve) => {
       const stringifyVps = await AsyncStorage.getItem("@selectedVps");
@@ -107,6 +111,7 @@ const VpsProvider = ({ children }) => {
     vpsList,
     groupedVps,
     lastLocations,
+    clearDefaultVps,
   };
   return <VpsContext.Provider value={contextValue}>{children}</VpsContext.Provider>;
 };

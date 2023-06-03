@@ -59,7 +59,7 @@ export const Location = ({ navigation }) => {
         throw new Error("can not fetch server list");
       }
       // console.log(">>>>>>>>>>>", list);
-      await getDefaultVps(list);
+      await getDefaultVps(list.map((_) => ({ ..._, type: "public" })));
 
       // setSelectedVps(defaultVps);
 
