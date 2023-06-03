@@ -159,3 +159,21 @@ export const delay = (time) => {
     }, time);
   });
 };
+
+export const isRemoteNewer = (remoteVersion, currentVersion) => {
+  if (
+    !remoteVersion ||
+    !currentVersion ||
+    isNaN(Number(remoteVersion?.split(".")?.join(""))) ||
+    isNaN(Number(currentVersion?.split(".")?.join("")))
+  ) {
+    return false;
+  }
+
+  if (
+    parseInt(remoteVersion?.split(".")?.join("")) > parseInt(currentVersion?.split(".")?.join(""))
+  ) {
+    return true;
+  }
+  return false;
+};

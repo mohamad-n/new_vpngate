@@ -13,7 +13,6 @@ import {
   Alert,
   Linking,
   SafeAreaView,
-  StatusBar,
   useColorScheme,
 } from "react-native";
 import { SharedHeader } from "../../shared";
@@ -32,7 +31,6 @@ export const Tos = ({ navigation }) => {
         backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
       }}
     >
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <View
         style={{
           flex: 1,

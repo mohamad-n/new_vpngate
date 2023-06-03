@@ -8,7 +8,6 @@ import {
   Image,
   Alert,
   SafeAreaView,
-  StatusBar,
   useColorScheme,
   ImageBackground,
   useWindowDimensions,
@@ -46,10 +45,12 @@ import {
 import { palette } from "../../../theme";
 import { useFocusEffect } from "@react-navigation/native";
 import { HomeBadgeState } from "./home.badge.state";
+import { AddProfileModal } from "./add.profile/add.profile.modal";
 
 export const Home = ({ navigation }) => {
   //
   const { setIsLoading } = React.useContext(LoaderContext);
+  const addProfileModalRef = React.useRef();
 
   const isSmartConnectAvailable = () => {
     return false;
@@ -218,53 +219,6 @@ export const Home = ({ navigation }) => {
     return true;
   };
 
-  // const checkProfileLink = async (link) => {
-  //   try {
-  //     // console.log(link);
-  //     const code = link?.split("/")?.pop();
-  //     // console.log(link);
-  //     if (code) {
-  //       const isCodeFormat = validateCodeFormat(code);
-  //       if (isCodeFormat) {
-  //         prepareTocheckActivationCode(code);
-  //         setAddProfileModal(false);
-
-  //         return;
-  //       }
-  //     }
-
-  //     const isLinkFormat = validateLinkFormat(link);
-  //     if (isLinkFormat) {
-  //       setIsLoading("checking profile");
-  //       const { data } = await axios.get(link);
-  //       setIsLoading(false);
-  //       const isProfileValid = validateIncomingProfile(data);
-
-  //       if (!isProfileValid) {
-  //         throw new Error("The entered profile is not valid");
-  //       }
-  //       changeDefaultVps({
-  //         profileData: data,
-  //         id: -1,
-  //         countryName: "User Profile",
-  //       });
-  //       setAddProfileModal(false);
-
-  //       return;
-  //     }
-  //     throw new Error("The link is not in a corrected link format");
-  //   } catch (error) {
-  //     // console.log('error : ', error?.message);
-  //     Alert.alert("Invalid Link", `${error?.message}`, [
-  //       {
-  //         text: "Ok",
-  //         onPress: () => {},
-  //         style: "cancel",
-  //       },
-  //     ]);
-  //   }
-  // };
-
   return (
     <SafeAreaView
       style={{
@@ -273,7 +227,6 @@ export const Home = ({ navigation }) => {
         backgroundColor: isDarkMode ? palette.dark.mainBackground : palette.light.mainBackground,
       }}
     >
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <View
         style={{
           flex: 1,
@@ -291,7 +244,7 @@ export const Home = ({ navigation }) => {
           navigation={navigation}
           title="VPNGate"
           addButton
-          addProfile={() => setAddProfileModal(true)}
+          addProfile={() => addProfileModalRef.current?.present()}
         />
         {/* <BottomModal
           visible={addProfileModal}
@@ -518,6 +471,10 @@ export const Home = ({ navigation }) => {
           </View>
         </View>
       </View>
+      <AddProfileModal
+        addProfileModalRef={addProfileModalRef}
+        close={() => addProfileModalRef.current?.dismiss()}
+      />
       <HomeBadgeState />
     </SafeAreaView>
   );

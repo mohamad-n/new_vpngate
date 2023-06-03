@@ -8,7 +8,13 @@ import * as Linking from "expo-linking";
 // import uuid from "react-native-uuid";
 import { publicService, request } from "../service/public.service";
 import { Alert, Platform, useColorScheme } from "react-native";
-import { getDate, getDateString, isExpired, validateCodeFormat } from "../libs/tools";
+import {
+  getDate,
+  getDateString,
+  isExpired,
+  isRemoteNewer,
+  validateCodeFormat,
+} from "../libs/tools";
 import { navigate, navigationRef } from "../views/navigation.ref";
 import { tempProfile } from "../asset/img/profiles/template";
 //-----android------
@@ -21,6 +27,7 @@ import moment from "moment";
 import { ClientInactive } from "../views/pages/client.inactive";
 import { DeviceInactive } from "../views/pages/device.inactive";
 import { UserNameModal } from "../views/shared/user.name.modal";
+import { UpdateVersionModal } from "../views/shared/update.version.modal";
 
 //-------ios--------
 const { IOS_APP_VERSION, ANDROID_APP_VERSION } = Constants.expoConfig.extra;
@@ -28,7 +35,11 @@ const SubscriptionContext = React.createContext();
 
 const SubscriptionProvider = ({ children }) => {
   const userNameModalRef = React.useRef();
+  const updateVersionModalRef = React.useRef();
+
   const [voucherCode, setVoucherCode] = React.useState();
+  const [versionInfo, setVersionInfo] = React.useState();
+  const [updateAvailable, setUpdateAvailable] = React.useState();
 
   const { setIsLoading } = React.useContext(LoaderContext);
   // const { disconnect, connectStatus, stablishConnection } = React.useContext(ConnectContext);
@@ -211,20 +222,23 @@ const SubscriptionProvider = ({ children }) => {
       //   setIsLoading("signing in");
       const email = await AsyncStorage.getItem("@email");
       if (!email) {
+        getLastVersion();
         return;
       }
 
       setUserEmail(email);
 
       const deviceSpecificId = await AsyncStorage.getItem("@deviceSpecificId");
-      const subscription = await publicService.sendRequest({
+      const { subscription, versionInfo } = await publicService.sendRequest({
         method: "GET",
-        url: "/client/subscription",
+        url: "/subscription/client",
         params: { deviceSpecificId },
         hasAuth: true,
       });
       console.log(">>>>>>>>>>>", subscription);
       updateSubscriptionState(subscription);
+      updateVersionInfo(versionInfo);
+
       //   setIsLoading(false);
     } catch (error) {
       console.log("checkSubscription error : ", error);
@@ -387,6 +401,74 @@ const SubscriptionProvider = ({ children }) => {
       text1: "voucher activation canceled",
     });
   };
+
+  const getLastVersion = async () => {
+    try {
+      const versionInfo = await publicService.sendRequest({
+        method: "GET",
+        url: "/setting/version",
+      });
+      updateVersionInfo(versionInfo);
+      //   setIsLoading(false);
+    } catch (error) {
+      //   console.log("checkSubscription error : ", error);
+      //   setIsLoading(false);
+      // showAlert({ message: error?.message || error, type: "error" });
+    }
+  };
+
+  const updateVersionInfo = async (versionInfo) => {
+    setVersionInfo(versionInfo);
+    // await AsyncStorage.removeItem("@ignoreUpdate");
+    const ignoreUpdate = await AsyncStorage.getItem("@ignoreUpdate");
+
+    if (
+      Platform.OS === "ios" &&
+      versionInfo?.ios &&
+      versionInfo?.ios?.version &&
+      versionInfo?.ios?.link &&
+      isRemoteNewer(versionInfo?.ios?.version, IOS_APP_VERSION)
+    ) {
+      setUpdateAvailable({
+        platform: "ios",
+        version: versionInfo?.ios?.version,
+        link: versionInfo?.ios?.link,
+      });
+      if (!ignoreUpdate) {
+        updateVersionModalRef?.current?.present();
+      }
+      return;
+    }
+    if (
+      Platform.OS === "android" &&
+      versionInfo?.android &&
+      versionInfo?.android?.version &&
+      versionInfo?.android?.link &&
+      isRemoteNewer(versionInfo?.android?.version, ANDROID_APP_VERSION)
+    ) {
+      setUpdateAvailable({
+        Platform: "android",
+        version: versionInfo?.android?.version,
+        link: versionInfo?.android?.link,
+      });
+      if (!ignoreUpdate) {
+        updateVersionModalRef?.current?.present();
+      }
+      return;
+    }
+  };
+
+  const updateVersionAction = (versionInfo) => {
+    updateVersionModalRef?.current?.dismiss();
+    if (Platform.OS === "ios") {
+      Linking.openURL(versionInfo?.ios?.link);
+      return;
+    }
+    if (Platform.OS === "android") {
+      Linking.openURL(versionInfo?.android?.link);
+    }
+  };
+
   const contextValue = {
     register,
     userEmail,
@@ -395,7 +477,10 @@ const SubscriptionProvider = ({ children }) => {
     checkSubscription,
     subscriptionInfo,
     hasSubscription,
+    checkUrl,
+    updateAvailable,
   };
+
   return (
     <SubscriptionContext.Provider value={contextValue}>
       <ClientInactive
@@ -414,6 +499,19 @@ const SubscriptionProvider = ({ children }) => {
         userNameModalRef={userNameModalRef}
         proceed={checkActivationCodeForAnonymous}
         cancel={cancelUserModalRef}
+      />
+
+      <UserNameModal
+        userNameModalRef={userNameModalRef}
+        proceed={checkActivationCodeForAnonymous}
+        cancel={cancelUserModalRef}
+      />
+
+      <UpdateVersionModal
+        updateVersionModalRef={updateVersionModalRef}
+        versionInfo={versionInfo}
+        cancel={() => updateVersionModalRef?.current?.dismiss()}
+        updateVersionAction={updateVersionAction}
       />
     </SubscriptionContext.Provider>
   );

@@ -8,23 +8,23 @@ import {
   TouchableOpacity,
   Alert,
   SafeAreaView,
-  StatusBar,
   useColorScheme,
   useWindowDimensions,
   Platform,
 } from "react-native";
 import Constants from "expo-constants";
+import * as Linking from "expo-linking";
 
-import { ServiceContext, SubscriptionContext } from "../../../providers";
+import { SubscriptionContext } from "../../../providers";
 import { palette } from "../../../theme";
 import { SharedHeader } from "../../shared";
 
-import { getDurationFromExpire, isExpired } from "../../../libs/tools";
 import { Badge } from "./badge";
 const { IOS_APP_VERSION, ANDROID_APP_VERSION } = Constants.expoConfig.extra;
 
 export const Setting = ({ navigation }) => {
-  const { logout, userEmail, subscriptionInfo } = React.useContext(SubscriptionContext);
+  const { logout, userEmail, subscriptionInfo, updateAvailable } =
+    React.useContext(SubscriptionContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const { width } = useWindowDimensions();
@@ -49,24 +49,27 @@ export const Setting = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles({ isDarkMode, width }).safeArea}>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <View style={styles({ isDarkMode, width }).mainView}>
         <SharedHeader navigation={navigation} title="Setting" />
 
         <View style={styles({ isDarkMode, width }).innerView}>
           <View style={styles({ isDarkMode, width }).upperView}>
             <Text style={styles({ isDarkMode, width }).headerTitle}>
-              Version : {Platform.OS === "ios" ? IOS_APP_VERSION : ANDROID_APP_VERSION}
+              App Version : {Platform.OS === "ios" ? IOS_APP_VERSION : ANDROID_APP_VERSION}
             </Text>
-            <TouchableOpacity
-              onPress={() => console.log("approval")}
-              style={[
-                styles({ isDarkMode, width }).actionButton,
-                { backgroundColor: palette.blueColor, marginHorizontal: 0 },
-              ]}
-            >
-              <Text style={[styles({ isDarkMode, width }).actionButtonText]}>check for update</Text>
-            </TouchableOpacity>
+            {updateAvailable && Platform.OS === updateAvailable?.platform && (
+              <TouchableOpacity
+                onPress={() => Linking.openURL(updateAvailable?.link)}
+                style={[
+                  styles({ isDarkMode, width }).actionButton,
+                  { backgroundColor: palette.blueColor, marginHorizontal: 0 },
+                ]}
+              >
+                <Text style={[styles({ isDarkMode, width }).actionButtonText]}>
+                  update to {updateAvailable?.version}
+                </Text>
+              </TouchableOpacity>
+            )}
           </View>
           {userEmail ? (
             <View style={[styles({ isDarkMode, width }).loggedinView]}>

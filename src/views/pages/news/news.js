@@ -7,7 +7,6 @@ import {
   View,
   FlatList,
   SafeAreaView,
-  StatusBar,
   useColorScheme,
   useWindowDimensions,
   Platform,
@@ -28,39 +27,15 @@ export const NotificationBoard = ({ route, navigation }) => {
   React.useEffect(() => {
     const getMessages = async () => {
       try {
-        // setIsLoading('getting messages', 'descriptor');
-
-        // await new Promise(resolve => {
-        //   setTimeout(() => {
-        //     resolve();
-        //   }, 2000);
-        // });
-        // setIsLoading(
-        //   'getting messages  ✅\nchecking your reachibility',
-        //   'descriptor',
-        // );
-
-        // await new Promise(resolve => {
-        //   setTimeout(() => {
-        //     resolve();
-        //   }, 2000);
-        // });
-        // setIsLoading(
-        //   'getting messages  ✅\nchecking your reachibility ✅\nfinding best server',
-        //   'descriptor',
-        // );
-
-        // await new Promise(resolve => {
-        //   setTimeout(() => {
-        //     resolve();
-        //   }, 2000);
-        // });
         setIsLoading("getting messages");
 
-        const list = await publicService.sendRequest({ method: "GET", url: "/message/app" });
+        const list = await publicService.sendRequest({
+          method: "GET",
+          url: "/message/list",
+          hasAuth: true,
+        });
         setIsLoading(false);
 
-        console.log(list);
         setMessageList(list);
       } catch (error) {
         // log;
@@ -80,8 +55,8 @@ export const NotificationBoard = ({ route, navigation }) => {
         style={styles({ isDarkMode, width }).flatList.MainView}
       >
         <View style={styles({ isDarkMode, width }).flatList.description}>
-          <Text style={styles({ isDarkMode, width }).flatList.title}>{item?.title}</Text>
-          <Text style={styles({ isDarkMode, width }).flatList.message}>{item?.body}</Text>
+          {/* <Text style={styles({ isDarkMode, width }).flatList.title}>{item?.description}</Text> */}
+          <Text style={styles({ isDarkMode, width }).flatList.message}>{item?.description}</Text>
           <Text style={styles({ isDarkMode, width }).flatList.date}>
             {getDate(item?.createdAt)}
           </Text>
@@ -92,7 +67,6 @@ export const NotificationBoard = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles({ isDarkMode }).mainView}>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <SharedHeader hasBack navigation={navigation} title="News Board" />
       <View style={styles({ isDarkMode }).outerView}>
         {messageList?.length ? (

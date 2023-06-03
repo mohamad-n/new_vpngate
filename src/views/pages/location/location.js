@@ -13,7 +13,6 @@ import {
   Alert,
   Linking,
   SafeAreaView,
-  StatusBar,
   useColorScheme,
   ImageBackground,
   useWindowDimensions,
@@ -111,7 +110,6 @@ export const Location = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles({ theme, isDarkMode }).mainView}>
-      <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} />
       <SharedHeader hasBack navigation={navigation} title=" Select Location" />
       <View style={styles({ theme, isDarkMode }).outerView}>
         <View style={styles({ theme, isDarkMode }).innerView}>

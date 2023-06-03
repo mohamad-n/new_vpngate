@@ -35,6 +35,36 @@ export const emailPrePhraseValidationSchema = object().shape({
     .min(6, ({ min }) => `name must be at least ${min} characters`)
     .required("name is required"),
 });
+
+yup.addMethod(yup.string, "urlCheck", function (errorMessage) {
+  const { message } = errorMessage;
+
+  return this.test(`test-url-type`, message, function (value) {
+    const { path, createError } = this;
+    const regex =
+      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
+
+    if (regex.test(value)) {
+      return true;
+    }
+
+    if (value.includes("vgate://activate_v2/")) {
+      return true;
+    }
+
+    return createError({ path, message });
+  });
+});
+
+export const urlValidationSchema = object().shape({
+  url: yup
+
+    .string()
+    // .min(6)
+    .urlCheck("invalid url")
+
+    .required("url is required"),
+});
 export const signUpVersificationValidationSchema = object().shape({
   code: yup.string().min(6).max(6).required("versification code is required"),
 });
