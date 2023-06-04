@@ -82,7 +82,7 @@ export const Home = ({ navigation }) => {
       changeStatus("DISCONNECTED");
       Toast.show({
         type: "customError",
-        text1: "Connection failed - tyr again",
+        text1: "Connection failed - try again",
       });
       console.log("get profile error : ", error);
     }

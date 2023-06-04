@@ -25,7 +25,7 @@ import {
   trafficIcon,
 } from "../../../asset/img/icon";
 import { getImage } from "../../../libs/tools";
-import { LoaderContext, VpsContext } from "../../../providers";
+import { ConnectContext, LoaderContext, SubscriptionContext, VpsContext } from "../../../providers";
 import { palette, theme } from "../../../theme";
 import { SharedHeader } from "../../shared";
 import { publicService } from "../../../service";
@@ -33,19 +33,46 @@ import { publicService } from "../../../service";
 export const PrivateLocation = ({ navigation }) => {
   const { setIsLoading } = React.useContext(LoaderContext);
   const { vpsList, getDefaultVps, changeDefaultVps, selectedVps } = React.useContext(VpsContext);
+  const { getConnectionProfile } = React.useContext(SubscriptionContext);
+  const { connect, changeStatus } = React.useContext(ConnectContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const { width } = useWindowDimensions();
 
   const selectVps = async (vps) => {
     try {
-      changeDefaultVps(vps, "private");
+      connectOnChangeVps(vps);
+
       navigation.navigate("Home");
     } catch (error) {
       // console.log('error ====> ', error);
     }
   };
 
+  const connectOnChangeVps = async (vps) => {
+    // if (connectStatus === "CONNECTED" || connectStatus === "CONNECTING") {
+    //   disconnect();
+    //   await delay(100);
+    // }
+    changeDefaultVps(vps, "private");
+    try {
+      changeStatus("CONNECTING");
+      const profile = await getConnectionProfile(vps);
+      // console.log(">>>>>>>>>>>", profile);
+      if (!profile) {
+        throw new Error();
+      }
+
+      connect(profile);
+    } catch (error) {
+      changeStatus("DISCONNECTED");
+      Toast.show({
+        type: "customError",
+        text1: "Connection failed - try again",
+      });
+      console.log("get profile error : ", error);
+    }
+  };
   React.useEffect(() => {
     getVpsList();
     return () => {};

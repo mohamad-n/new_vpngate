@@ -55,22 +55,19 @@ export const Location = ({ navigation }) => {
     // }
     changeDefaultVps(vps);
     try {
-      if (hasSubscription) {
-        // const profile = await getConnectionProfile(selectedVps);
-
-        return;
-      }
-
       changeStatus("CONNECTING");
       const profile = await getConnectionProfile(vps);
       // console.log(">>>>>>>>>>>", profile);
+      if (!profile) {
+        throw new Error();
+      }
 
       connect(profile);
     } catch (error) {
       changeStatus("DISCONNECTED");
       Toast.show({
         type: "customError",
-        text1: "Connection failed - tyr again",
+        text1: "Connection failed - try again",
       });
       console.log("get profile error : ", error);
     }
