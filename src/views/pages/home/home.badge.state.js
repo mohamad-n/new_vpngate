@@ -20,15 +20,15 @@ export const HomeBadgeState = ({}) => {
           position: "absolute",
           width: width,
           bottom: 0,
-          height: 70,
+          height: 60,
           backgroundColor: palette.agreeColor,
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "flex-start",
           alignItems: "center",
         }}
       >
-        <Text style={{ color: "white" }}>Premium Activated</Text>
+        <Text style={{ color: "white", padding: 10 }}>Premium Activated</Text>
       </View>
     );
   }

@@ -122,6 +122,14 @@ export const SelectLocationButton = ({ navigation }) => {
             >
               {selectedVps?.countryName}
             </Text>
+            <Text
+              style={{
+                fontSize: 12,
+                color: isDarkMode ? palette.dark.subTitle : palette.light.subTitle,
+              }}
+            >
+              {selectedVps?.ip}
+            </Text>
           </View>
           <Image
             resizeMode="cover"

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import { NativeModules, NativeEventEmitter, AppState } from "react-native";
+import Toast from "react-native-toast-message";
 
 // import { decode } from "base-64";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -49,6 +50,20 @@ const ConnectProvider = ({ children }) => {
 
     return () => clearInterval(interval);
   }, []);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (ref.current === "CONNECTED") {
+        Toast.show({
+          type: "customSuccess",
+          text1: "Successfully Connected",
+        });
+        clearInterval(interval);
+      }
+    }, 200);
+
+    return () => clearInterval(interval);
+  }, [ref.current]);
 
   React.useEffect(() => {
     AppState.addEventListener("change", _handleAppStateChange);

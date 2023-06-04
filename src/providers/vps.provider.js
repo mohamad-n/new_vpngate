@@ -1,6 +1,8 @@
 import * as React from "react";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { groupServer } from "../libs";
+import { ConnectContext } from "./connection.provider";
 const VpsContext = React.createContext();
 
 const VpsProvider = ({ children }) => {
@@ -104,6 +106,7 @@ const VpsProvider = ({ children }) => {
     }
     setLastLocations([]);
   };
+
   const contextValue = {
     selectedVps,
     getDefaultVps,

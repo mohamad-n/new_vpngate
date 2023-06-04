@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
   SectionList,
 } from "react-native";
+import Toast from "react-native-toast-message";
 
 import {
   flagPlaceHolder,
@@ -19,15 +20,17 @@ import {
   selectedMarkerIcon,
   trafficIcon,
 } from "../../../asset/img/icon";
-import { getImage } from "../../../libs/tools";
-import { LoaderContext, VpsContext } from "../../../providers";
+import { delay, getImage } from "../../../libs/tools";
+import { ConnectContext, LoaderContext, SubscriptionContext, VpsContext } from "../../../providers";
 import { palette, theme } from "../../../theme";
 import { SharedHeader } from "../../shared";
 import { publicService } from "../../../service";
 
 const tabTitles = ["All", "By Country", "Last Locations"];
 export const Location = ({ navigation }) => {
-  // const { changeDefaultVps } = React.useContext(ServiceContext);
+  const { hasSubscription, getConnectionProfile } = React.useContext(SubscriptionContext);
+  const { connect, disconnect, connectStatus, changeStatus } = React.useContext(ConnectContext);
+
   const { setIsLoading } = React.useContext(LoaderContext);
   const { vpsList, getDefaultVps, changeDefaultVps, selectedVps, groupedVps, lastLocations } =
     React.useContext(VpsContext);
@@ -38,10 +41,38 @@ export const Location = ({ navigation }) => {
 
   const selectVps = async (vps) => {
     try {
-      changeDefaultVps(vps);
+      connectOnChangeVps(vps);
       navigation.navigate("Home");
     } catch (error) {
       // console.log('error ====> ', error);
+    }
+  };
+
+  const connectOnChangeVps = async (vps) => {
+    // if (connectStatus === "CONNECTED" || connectStatus === "CONNECTING") {
+    //   disconnect();
+    //   await delay(100);
+    // }
+    changeDefaultVps(vps);
+    try {
+      if (hasSubscription) {
+        // const profile = await getConnectionProfile(selectedVps);
+
+        return;
+      }
+
+      changeStatus("CONNECTING");
+      const profile = await getConnectionProfile(vps);
+      // console.log(">>>>>>>>>>>", profile);
+
+      connect(profile);
+    } catch (error) {
+      changeStatus("DISCONNECTED");
+      Toast.show({
+        type: "customError",
+        text1: "Connection failed - tyr again",
+      });
+      console.log("get profile error : ", error);
     }
   };
 
@@ -70,6 +101,7 @@ export const Location = ({ navigation }) => {
       setIsLoading(false);
     }
   };
+
   const renderItem = ({ item }) => {
     return (
       <TouchableOpacity

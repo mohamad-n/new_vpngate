@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Text } from "./text";
-import { ConnectContext } from "../../provider";
+import { ConnectContext } from "../../providers";
 
 const Timer = ({ textStyle }) => {
   const [timer, setTimer] = React.useState(0);

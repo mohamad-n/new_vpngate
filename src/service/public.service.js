@@ -6,7 +6,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { delay } from "../libs/tools";
 
 const { BASE_URL, IOS_APP_VERSION, ANDROID_APP_VERSION } = Constants.expoConfig.extra;
-const timeout = 6000;
+const timeout = 30000;
 const axiosRequestInstance = axios.create({
   baseURL: BASE_URL,
 });

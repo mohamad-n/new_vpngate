@@ -11,9 +11,9 @@ import TunnelKitManager
 import TunnelKitOpenVPN
 import UIKit
 
-private let appGroup = "group.ios.theta.vpn.app"
+private let appGroup = "group.online.vpngate.app.ios"
 
-private let tunnelIdentifier = "ios.theta.vpn.app.thetaextension"
+private let tunnelIdentifier = "online.vpngate.app.ios.openextesion"
 
 class OpenVPNController {
 
@@ -56,7 +56,7 @@ class OpenVPNController {
    func connect(ovpnContent:String) {
      self.ovpnContent = ovpnContent
        cfg = OpenVPN.DemoConfiguration.make(
-           "ThetaVPN",
+           "VPNGate",
            appGroup: appGroup,
            ovpnContent: ovpnContent
        )
@@ -86,7 +86,7 @@ class OpenVPNController {
      Task {
        let extra = NetworkExtensionExtra()
        cfg = OpenVPN.DemoConfiguration.make(
-         "ThetaVPN",
+         "VPNGate",
            appGroup: "not.allowed",
            ovpnContent: self.ovpnContent
        )
@@ -106,7 +106,7 @@ class OpenVPNController {
      Task {
        let extra = NetworkExtensionExtra()
        cfg = OpenVPN.DemoConfiguration.make(
-         "ThetaVPN",
+         "VPNGate",
            appGroup: appGroup,
            ovpnContent: self.ovpnContent
        )

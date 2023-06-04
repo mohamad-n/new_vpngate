@@ -11,29 +11,32 @@ import {
   useWindowDimensions,
   Platform,
 } from "react-native";
+import Toast from "react-native-toast-message";
+
 import { backgroundDots } from "../../../asset/img";
 import { triggerIcon } from "../../../asset/img/icon";
 import { SharedHeader } from "../../shared";
 import { LoaderContext } from "../../../providers/Loader.Provider";
-import { SubscriptionContext, VpsContext } from "../../../providers";
+import { ConnectContext, SubscriptionContext, VpsContext } from "../../../providers";
 import { palette } from "../../../theme";
 import { useFocusEffect } from "@react-navigation/native";
 import { HomeBadgeState } from "./home.badge.state";
 import { AddProfileModal } from "./add.profile/add.profile.modal";
 import { SelectLocationButton } from "./select.location";
+import Timer from "../../shared/timer";
 
 export const Home = ({ navigation }) => {
   //
-  const { setIsLoading } = React.useContext(LoaderContext);
   const addProfileModalRef = React.useRef();
 
-  const isSmartConnectAvailable = () => {
-    return false;
-  };
+  // const isSmartConnectAvailable = () => {
+  //   return false;
+  // };
   const { checkSubscription, hasSubscription, getConnectionProfile } =
     React.useContext(SubscriptionContext);
 
   const { selectedVps } = React.useContext(VpsContext);
+  const { connect, disconnect, connectStatus, changeStatus } = React.useContext(ConnectContext);
 
   const isDarkMode = useColorScheme() === "dark";
   const { width } = useWindowDimensions();
@@ -46,39 +49,19 @@ export const Home = ({ navigation }) => {
   );
 
   // React.useEffect(() => {
-  //   if (connectStatus === "CONNECTED") {
+  //   if (selectedVps) {
   //     setTimerIsStopped(false);
   //   }
-  //   if (connectStatus === "DISCONNECTED") {
-  //     setTimerIsStopped(true);
-  //   }
+
   //   return () => {};
-  // }, [connectStatus]);
-
-  const getConnectButtonColor = () => {
-    // if (connectStatus === "DISCONNECTED") {
-    //   return palette.connectButton.disconnected;
-    // }
-
-    // if (connectStatus === "CONNECTED") {
-    //   return palette.connectButton.connected;
-    // }
-
-    return palette.connectButton.disabled;
-  };
-
-  const isConnectButtonDisabled = () => {
-    // if (connectStatus === "DISCONNECTED") {
-    //   return false;
-    // }
-
-    // if (connectStatus === "CONNECTED") {
-    //   return false;
-    // }
-    return true;
-  };
+  // }, [selectedVps]);
 
   const connectButtonAction = async () => {
+    if (connectStatus === "CONNECTED" || connectStatus === "CONNECTING") {
+      disconnect();
+      return;
+    }
+
     if (!selectedVps) {
       if (hasSubscription) {
         navigation.navigate("PrivateLocation");
@@ -88,12 +71,47 @@ export const Home = ({ navigation }) => {
       return;
     }
     try {
+      changeStatus("CONNECTING");
       const profile = await getConnectionProfile(selectedVps);
-      console.log(">>>>>>>>>>>", profile);
+      if (!profile) {
+        throw new Error();
+      }
+
+      connect(profile);
     } catch (error) {
+      changeStatus("DISCONNECTED");
+      Toast.show({
+        type: "customError",
+        text1: "Connection failed - tyr again",
+      });
       console.log("get profile error : ", error);
     }
   };
+
+  const getConnectButtonColor = () => {
+    if (connectStatus === "DISCONNECTED" || connectStatus === "UNKNOWN") {
+      return palette.connectButton.disconnected;
+    }
+
+    if (connectStatus === "CONNECTED") {
+      return palette.connectButton.connected;
+    }
+
+    return palette.connectButton.disabled;
+  };
+
+  const isConnectButtonDisabled = () => {
+    if (
+      connectStatus === "DISCONNECTED" ||
+      connectStatus === "CONNECTED" ||
+      connectStatus === "UNKNOWN"
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
   return (
     <SafeAreaView
       style={{
@@ -176,7 +194,7 @@ export const Home = ({ navigation }) => {
                 color: isDarkMode ? palette.dark.title : palette.light.title,
               }}
             >
-              {/* {connectStatus} */}
+              {connectStatus === "UNKNOWN" ? "DISCONNECTED" : connectStatus}
             </Text>
 
             <ImageBackground
@@ -186,7 +204,7 @@ export const Home = ({ navigation }) => {
             >
               <TouchableOpacity
                 onPress={() => connectButtonAction()}
-                // disabled={isConnectButtonDisabled()}
+                disabled={isConnectButtonDisabled()}
                 style={{
                   flexDirection: "column",
                   alignSelf: "center",
@@ -213,16 +231,14 @@ export const Home = ({ navigation }) => {
                 />
               </TouchableOpacity>
             </ImageBackground>
-            {/* <Timer stopped={timerIsStopped} /> */}
-            <Text
-              style={{
-                fontSize: 18,
+            <Timer
+              textStyle={{
                 marginTop: 20,
+                height: 20,
+                fontSize: 20,
                 color: isDarkMode ? palette.dark.title : palette.light.title,
               }}
-            >
-              Connected Time
-            </Text>
+            />
           </View>
         </View>
       </View>

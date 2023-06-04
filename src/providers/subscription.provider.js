@@ -28,6 +28,8 @@ import { DeviceInactive } from "../views/pages/device.inactive";
 import { UserNameModal } from "../views/shared/user.name.modal";
 import { UpdateVersionModal } from "../views/shared/update.version.modal";
 import { VpsContext } from "./vps.provider";
+import { ConnectContext } from "./connection.provider";
+import { userDefaultsShouldRemove } from "../config/constants";
 
 const { IOS_APP_VERSION, ANDROID_APP_VERSION, ENCRYPTION_KEY } = Constants.expoConfig.extra;
 const SubscriptionContext = React.createContext();
@@ -35,6 +37,7 @@ const SubscriptionContext = React.createContext();
 const SubscriptionProvider = ({ children }) => {
   const userNameModalRef = React.useRef();
   const updateVersionModalRef = React.useRef();
+  const { removeConnection, isConnected, disconnect } = React.useContext(ConnectContext);
 
   const [voucherCode, setVoucherCode] = React.useState();
   const [versionInfo, setVersionInfo] = React.useState();
@@ -42,7 +45,6 @@ const SubscriptionProvider = ({ children }) => {
   const { clearDefaultVps } = React.useContext(VpsContext);
 
   const { setIsLoading } = React.useContext(LoaderContext);
-  // const { disconnect, connectStatus, stablishConnection } = React.useContext(ConnectContext);
   const [subscriptionInfo, setSubscriptionInfo] = React.useState();
   const [hasSubscription, setHasSubscription] = React.useState();
   const [clientInactiveModalState, setClientInactiveModalState] = React.useState({
@@ -165,6 +167,9 @@ const SubscriptionProvider = ({ children }) => {
           text1: "Successfully signed in",
         });
         clearDefaultVps();
+        if (isConnected) {
+          disconnect();
+        }
         return resolve();
       } catch (error) {
         console.log("signup error : ", error);
@@ -192,14 +197,16 @@ const SubscriptionProvider = ({ children }) => {
           });
         } catch (error) {}
 
-        await AsyncStorage.removeItem("@email");
-        await AsyncStorage.removeItem("@accessToken");
-        await AsyncStorage.removeItem("@refreshToken");
+        await AsyncStorage.multiRemove(userDefaultsShouldRemove);
 
         setHasSubscription();
         setSubscriptionInfo();
         setUserEmail();
+        if (isConnected) {
+          disconnect();
+        }
 
+        removeConnection();
         setIsLoading(false);
         Toast.show({
           type: "customSuccess",
@@ -256,7 +263,7 @@ const SubscriptionProvider = ({ children }) => {
     const { inactiveDevice, inactiveClient } = subscription;
     if (inactiveClient) {
       // navigate to deactivate client
-      // remove vpn configuration
+      removeConnection();
       // return
       setTimeout(() => {
         setClientInactiveModalState({ isVisible: true, info: null });
@@ -265,7 +272,7 @@ const SubscriptionProvider = ({ children }) => {
     }
     if (inactiveDevice) {
       // navigate to deactivate device
-      // remove vpn configuration
+      removeConnection();
 
       const { deviceManufacturer, deviceOsVersion, deviceModelName } = subscription?.extraInfo;
       setTimeout(() => {
@@ -486,7 +493,15 @@ const SubscriptionProvider = ({ children }) => {
             });
 
         if (hasSubscription) {
-          return resolve();
+          //   console.log(">>>>>>>>>>>", hasSubscription);
+          const clientUuid = await AsyncStorage.getItem("@clientUuid");
+          const { certificate } = await decrypt(
+            encryptedProfile,
+            `${clientUuid}-${selectedVps?.uuid}-${ENCRYPTION_KEY}`
+          );
+
+          //   console.log(">>>>>>>>>>>", certificate);
+          return resolve(certificate);
         }
 
         const { certificate } = await decrypt(

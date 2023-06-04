@@ -35,7 +35,7 @@ export const palette = {
   orangeColor: "#FF841E",
   connectButton: {
     disconnected: "#e02020",
-    connected: "#0962EA",
+    connected: "#39B98B",
     disabled: "#BFBFBF",
   },
   notification: {
